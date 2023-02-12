@@ -7,12 +7,12 @@ interface SiteConfig {
   links: {
     twitter: string
     github: string
-    docs: string
+    // docs: string
   }
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Next.js",
+  name: "Future Me",
   description:
     "Beautifully designed components built with Radix UI and Tailwind CSS.",
   mainNav: [
@@ -22,8 +22,8 @@ export const siteConfig: SiteConfig = {
     },
   ],
   links: {
-    twitter: "https://twitter.com/shadcn",
-    github: "https://github.com/shadcn/ui",
-    docs: "https://ui.shadcn.com",
+    twitter: "https://twitter.com/bettyalagwu",
+    github: "https://github.com/betty-alagwu",
+    // docs: "https://ui.shadcn.com",
   },
 }
