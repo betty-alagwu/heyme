@@ -280,7 +280,7 @@ const Recording = () => {
                 {hasPermissionIssues ? (
                     <>
                         <h1 className="font-normal text-red-500 text-center text-lg ">Please check your camera & microphone </h1>
-                        <p className=" font-normal dark:text-white text-center pt-10">Oops&apos; It looks like we don&lsquo;t have access to your camera and microphone.
+                        <p className=" font-normal dark:text-white text-center pt-10">Oops! It looks like we don&lsquo;t have access to your camera and microphone.
                             To use this feature, please grant access in your browser settings.</p>
                     </>
                 ) : null}
