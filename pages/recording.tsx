@@ -280,7 +280,7 @@ const Recording = () => {
                 {hasPermissionIssues ? (
                     <>
                         <h1 className="font-normal text-red-500 text-center text-lg ">Please check your camera & microphone </h1>
-                        <p className=" font-normal dark:text-white text-center pt-10">Oops! It looks like we don't have access to your camera and microphone.
+                        <p className=" font-normal dark:text-white text-center pt-10">Oops&lsquo; It looks like we dont have access to your camera and microphone.
                             To use this feature, please grant access in your browser settings.</p>
                     </>
                 ) : null}
@@ -290,7 +290,7 @@ const Recording = () => {
                         <>
                             {isStopped ? null : (
                             <p className="text-sm mb-6">
-                                You'll have 10 minutes to record a message. After 10 minutes the video will automatically stop.
+                                You will have 10 minutes to record a message. After 10 minutes the video will automatically stop.
                             </p>
                         )}
                         </>
