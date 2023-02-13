@@ -32,11 +32,10 @@ export default function IndexPage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <section className="container grid  items-center gap-6 pt-6 pb-8 md:py-10 justify-center ">
+      <section className="container grid items-center gap-6 pt-6 pb-8 md:py-10 justify-center ">
         <div className="flex max-w-[980px] flex-col items-center  text-center gap-2">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tighter sm:text-3xl md:text-5xl lg:text-6xl">
-            preserving memories and    <br className="hidden sm:inline" />
-            messages for the future.
+            Preserving memories     <br className="hidden sm:inline" />for the future.
           </h1>
           <p className="max-w-[700px] text-lg text-slate-700 dark:text-slate-400 sm:text-xl  ">
             create a video message for your future self to be delivered at a chosen date and time.

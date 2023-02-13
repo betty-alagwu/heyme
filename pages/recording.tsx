@@ -50,7 +50,7 @@ const Recording = () => {
     const [uploadVideo, setUploadVideo] = useState<File | null>(null)
     const [videoSrc, setVideoSrc] = useState('')
     const videoRef = useRef<HTMLInputElement>()
-    const [selectedOption, setSelectedOption] = useState('')
+    const [selectedOption, setSelectedOption] = useState('Yourself')
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
     const [deliverIn, setDeliverIn] = useState('');
@@ -228,9 +228,8 @@ const Recording = () => {
     const handleBlur = () => {
         const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!emailRegex.test(email)) {
-            setError('Invalid email');
+            setError('Invalid email required');
         } else {
-            console.log('valid email')
             setError('')
         }
     };
@@ -256,7 +255,7 @@ const Recording = () => {
 
     return (
         <Layout>
-            <section className="container justify-center text-center items-center pt-6  md:pb-10  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md mt-12 rounded-xl">
+            <section className="container justify-center text-center items-center pt-6  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-12 rounded-xl  pb-6">
                 {isStopped ? null : (
                     <div className="rounded-2xl w-full mb-6 relative">
                         <video className="w-full aspect-video rounded-2xl relative bg-black" ref={videoPlayer} autoPlay muted style={{ width: '800px', height: '298px' }}>
@@ -352,10 +351,10 @@ const Recording = () => {
                         </div>
                         <div className=" flex flex-start space-x-4">
                             <button  className={`inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold
-                         text-slate-900 transition-colors  ${selectedOption === "Yourself" ? "bg-slate-700 text-slate-50" : ""}`} onClick={() => handleSelect('Yourself')}>Yourself</button>
+                         text-slate-900 transition-colors  ${selectedOption === "Yourself" ? "bg-slate-700 text-white " : ""}`} onClick={() => handleSelect('Yourself')}>Yourself</button>
 
                             <button className={`inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold
-                         text-slate-900 transition-colors  ${selectedOption === "Someone else" ? "bg-slate-700 text-slate-50" : ""}`} onClick={() => handleSelect('Someone else')}>Someone else</button>
+                         text-slate-900 transition-colors ${selectedOption === "Someone else" ? "bg-slate-700 text-white " : ""}`} onClick={() => handleSelect('Someone else')}>Someone else</button>
                         </div>
 
                         <div className="text-start pt-4 pb-2">
@@ -363,7 +362,7 @@ const Recording = () => {
                         </div>
                         <Input type="email"
                             placeholder="Email"
-                            className={error ? 'dark:placeholder:text-white placeholder:text-gray-700 border-red-500' : 'dark:placeholder:text-white placeholder:text-gray-700'}
+                            className={error ? 'dark:placeholder:text-slate-300 placeholder:text-gray-700 border-red-500 dark:border-red-500' : 'dark:placeholder:text-white placeholder:text-gray-700'}
                             onChange={handleChange}
                             onBlur={handleBlur} />
                         {error && <div className="text-start pt-1 text-sm text-red-500">{error}</div>}
@@ -380,11 +379,11 @@ const Recording = () => {
                             <>
                                 {timer < (defaultCounterTimer) ? (
                                     <>
-                                        <h1 className="font-bold  top-10 mt-8">Starting in {timer}</h1>
+                                        <h1 className="font-bold  top-10 mt-8 ">Starting in {timer}</h1>
                                     </>
                                 ) : (
                                     <>
-                                        {hasPermissionIssues ? null : <Button className="mt-8 w-full" onClick={startRecording} size='lg'>
+                                        {hasPermissionIssues ? null : <Button className="mt-8 w-full dark:hover:text-slate-100 dark:hover:bg-slate-700" onClick={startRecording} size='lg'>
                                             Start recording
                                         </Button>}
                                     </>
@@ -393,7 +392,7 @@ const Recording = () => {
                         )}
                     </>
                 )}
-                {isStopped && !isUploading ? <Button className="mt-10 w-full" onClick={uploadVideoToCloudinary}>Upload</Button> : null}
+                {isStopped && !isUploading ? <Button className="mt-10 w-full dark:hover:text-slate-100 dark:hover:bg-slate-700" onClick={uploadVideoToCloudinary}>Upload</Button> : null}
                 {isUploading ? <Progress value={uploadProgress * 100} /> : null}
                 {/* <h1 className="font-bold text-lg pt-4">OR</h1>
                 <input type="file" accept="video/*" ref={videoRef} className="mt-5" onChange={(e) => setUploadVideo(e.target.files[0])}/>
