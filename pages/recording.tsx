@@ -480,7 +480,7 @@ const Recording = () => {
                 {isUploading ? <Progress className="mt-10" value={uploadProgress * 100} /> : null}
 
                 {isUsingFileUpload ? (
-                    <p className="text-sm mt-4">Can't upload a video? <button onClick={function () {
+                    <p className="text-sm mt-4">Can&apos;t upload a video? <button onClick={function () {
                         if (isUploading) {
                             return
                         }
