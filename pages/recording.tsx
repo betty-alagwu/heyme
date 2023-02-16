@@ -1,27 +1,18 @@
 import Head from "next/head"
 import Link from "next/link"
 import Axios from 'axios'
-import React, { useState, useEffect, useRef, useMemo, MouseEventHandler } from 'react'
+import { detect as detectBrowser, detectOS, BrowserInfo } from 'detect-browser'
+import React, { useState, useEffect, useRef, useMemo, MouseEventHandler, MutableRefObject } from 'react'
 import { BsExclamationTriangleFill, BsRecordCircle } from "react-icons/bs";
-import { FiVideo } from "react-icons/fi";
 import { ImStop } from "react-icons/im";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
+
 import { IoIosRadioButtonOn } from "react-icons/io";
 // import { siteConfig } from "@/config/site"
 import { Layout } from "@/components/layout"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input"
-import { ChevronsUpDown, Plus, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { Progress } from "@/components/ui/progress";
 
 const defaultIntervalTimer = 3000
@@ -34,7 +25,7 @@ const Recording = () => {
     // 4. if media recorder is created, register the event listeners for data available and media recording stopped.
     // 5. when data available, store the chunks
     // 6. when data stopped, show video player.
-    // 7. when STart button is clicked, start media recorder.
+    // 7. when STart button is clicked, start media recorder. 
     const mediaRecorder = useRef<MediaRecorder>()
     const mediaChunks = useRef<Blob[]>([])
     const [isRecording, setIsRecording] = useState(false)
@@ -57,29 +48,60 @@ const Recording = () => {
     const [uploadProgress, setUploadProgress] = useState(0)
     const [isUploading, setIsUploading] = useState(false)
     const [complete, setComplete] = useState(false)
+    const [browser, setBrowser] = useState<ReturnType<typeof detectBrowser> | null>(null);
+    const [isUsingFileUpload, setIsUsingFileUpload] = useState(false)
+    const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
+    const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
+
+    const uploadedVideoUrl = useMemo(function () {
+        return uploadedVideo ? URL.createObjectURL(uploadedVideo) : null
+    }, [uploadedVideo])
 
 
-    async function uploadVideoToCloudinary() {
-        setIsUploading(true)
+
+    async function uploadVideoToCloudinary(file: Blob | File) {
         const form = new FormData()
         const preset = 'dfoz5xyo'
 
         form.append('upload_preset', preset)
-        form.append('file', new Blob(mediaChunks.current))
+        form.append('file', file)
         form.append('cloud_name', 'dq5e0bbl8')
 
-        Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload/', form, {
+        return Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload', form, {
             onUploadProgress(event) {
                 setUploadProgress(event.progress)
             }
         })
-            .then(() => {
-                setComplete(true)
-            })
-            .catch(console.error)
-            .finally(() => {
-                setIsUploading(false)
-            })
+    }
+
+    async function uploadUploadedVideo() {
+
+        setIsUploading(true)
+
+        try {
+            await uploadVideoToCloudinary(uploadedVideo)
+            setComplete(true)
+        } catch (error) {
+
+        }
+
+        setIsUploading(false)
+    }
+
+    async function uploadRecordedVideo() {
+        const blob = new Blob(mediaChunks.current)
+
+        setIsUploading(true)
+
+        try {
+            await uploadVideoToCloudinary(blob)
+
+            setComplete(true)
+        } catch (error) {
+
+        }
+
+        setIsUploading(false)
     }
 
 
@@ -185,19 +207,20 @@ const Recording = () => {
     const cameras = devices.filter(device => device.kind === 'videoinput')
     const microphones = devices.filter(device => device.kind === 'audioinput')
 
+
     const defaultCamera = cameras.find(camera => camera.label.toLowerCase().match(/built-in/) || camera.label.toLowerCase().match(/default/)) || cameras[0]
     const defaultMicrophone = microphones.find(mic => mic.label.toLowerCase().match(/built-in/) || mic.label.toLowerCase().match(/default/)) || microphones[0]
 
-    const minutes = Math.floor(timeElapsed / 60);
-    const seconds = timeElapsed % 60;
+    const minutes = Math.floor(timeElapsed / 60)
+    const seconds = timeElapsed % 60
 
 
     useEffect(() => {
         let interval = null
-    
+
         if (isRecording) {
             interval = setInterval(() => {
-                setTimeElapsed(timeElapsed - 1);
+                setTimeElapsed(timeElapsed - 1)
                 if (timeElapsed === 0) {
                     setIsStopped(true)
                 }
@@ -223,12 +246,12 @@ const Recording = () => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(event.target.value)
         setError('')
-    };
+    }
 
     const handleBlur = () => {
         const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!emailRegex.test(email)) {
-            setError('Invalid email required');
+            setError('Email required');
         } else {
             setError('')
         }
@@ -237,7 +260,9 @@ const Recording = () => {
 
     const handleDeliverInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDeliverIn(event.target.value);
-    };
+    }
+
+
 
 
     const handleUpload = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -252,48 +277,91 @@ const Recording = () => {
     };
 
 
+    useEffect(() => {
+        if (typeof document === 'undefined') {
+            return
+        }
+        setBrowser(detectBrowser())
+    }, []);
+
+    if (complete) {
+        return (
+            <Layout>
+                <section>
+                    <div>
+                        <h1>Thank you please share.</h1>
+                    </div>
+                </section>
+            </Layout>
+        )
+    }
+
+
 
     return (
         <Layout>
             <section className="container justify-center text-center items-center pt-6  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-12 rounded-xl  pb-6">
-                {isStopped ? null : (
+                {(isStopped || isUsingFileUpload) ? null : (
                     <div className="rounded-2xl w-full mb-6 relative">
                         <video className="w-full aspect-video rounded-2xl relative bg-black" ref={videoPlayer} autoPlay muted style={{ width: '800px', height: '298px' }}>
                         </video>
                         {hasPermissionIssues ? <BsExclamationTriangleFill className="w-10 h-10 absolute top-[45%] left-[45%] fill-current text-white" /> : null}
                         {hasPermissionIssues ? null : <div className="absolute top-6 right-6 font-semibold text-red-500 flex  items-center ">
-                        <IoIosRadioButtonOn className="mr-2"/>    {minutes < 10 ? `0${minutes}` : minutes} : {seconds < 10 ? `0${seconds}` : seconds}
+                            <IoIosRadioButtonOn className="mr-2" />    {minutes < 10 ? `0${minutes}` : minutes} : {seconds < 10 ? `0${seconds}` : seconds}
                         </div>}
 
                         {isRecording ? (
                             <button className="absolute inset-0 top-[10%] left-[47%] " onClick={stopRecording}>
-                                <ImStop 
-                                className="text-red-500 " 
-                                style={{
-                                    fontSize: '30px'
-                                }} />
+                                <ImStop
+                                    className="text-red-500 "
+                                    style={{
+                                        fontSize: '30px'
+                                    }} />
                             </button>
                         ) : null}
                     </div>
                 )}
-                {hasPermissionIssues ? (
+                {isUsingFileUpload ? (
                     <>
-                        <h1 className="font-normal text-red-500 text-center text-lg ">Please check your camera & microphone </h1>
+
+                        {uploadedVideoUrl ? (
+                            <video src={uploadedVideoUrl} controls className="w-full aspect-video rounded-2xl relative bg-black">
+
+                            </video>
+                        ) : (
+                            <button onClick={function () {
+                                uploadVideoInputRef.current.click()
+                            }} className="flex items-center justify-center w-full rounded-2xl relative bg-black" style={{ height: '298px' }}>
+                                <span className="font-semibold">
+                                    Click to upload a video
+                                </span>
+                            </button>
+                        )}
+                    </>
+                ) : null}
+                <input accept="video/*, .mkv" className='hidden' type='file' ref={uploadVideoInputRef} onChange={function (event) {
+                    const video = event.target.files[0]
+                    // TODO: Validate length of video
+                    setUploadedVideo(video)
+                }} />
+                {hasPermissionIssues && !isUsingFileUpload ? (
+                    <>
+                        <h1 className="font-normal text-red-500 text-center text-lg">Please check your camera & microphone </h1>
                         <p className=" font-normal dark:text-white text-center pt-10">Oops! It looks like we don&lsquo;t have access to your camera and microphone.
                             To use this feature, please grant access in your browser settings.</p>
                     </>
                 ) : null}
-                {!hasPermissionIssues && (
+                {!hasPermissionIssues && !isUsingFileUpload && (
                     <>
-                    {isRecording ? null : (
-                        <>
-                            {isStopped ? null : (
-                            <p className="text-sm mb-6">
-                                You will have 10 minutes to record a message. After 10 minutes the video will automatically stop.
-                            </p>
+                        {isRecording ? null : (
+                            <>
+                                {isStopped ? null : (
+                                    <p className="text-sm mb-6">
+                                        You will have 10 minutes to record a message. After 10 minutes the video will automatically stop.
+                                    </p>
+                                )}
+                            </>
                         )}
-                        </>
-                    )}
                         {!isStopped && !isRecording ? (
                             <>
                                 <div className="text-start font-medium text-sm pb-2">
@@ -343,19 +411,28 @@ const Recording = () => {
                         </video>
                     </div>
                 ) : null}
-                {isStopped ? (
+                {(isStopped || isUsingFileUpload) ? (
                     <>
                         <div className="font-bold text-lg pt-5">Send your recording to the future</div>
                         <div className="text-start pt-4 pb-2">
                             <label htmlFor="sending-to">Sending to</label>
                         </div>
-                        <div className=" flex flex-start space-x-4">
-                            <button  className={`inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold
-                         text-slate-900 transition-colors  ${selectedOption === "Yourself" ? "bg-slate-700 text-white " : ""}`} onClick={() => handleSelect('Yourself')}>Yourself</button>
+                        <div className="flex flex-start space-x-4">
+                            <button
+                                className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
+                                ${selectedOption === "Yourself" ? "bg-slate-100 text-slate-900" : ""}`}
+                                onClick={() => handleSelect('Yourself')}>
+                                Yourself
+                            </button>
 
-                            <button className={`inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold
-                         text-slate-900 transition-colors ${selectedOption === "Someone else" ? "bg-slate-700 text-white " : ""}`} onClick={() => handleSelect('Someone else')}>Someone else</button>
+                            <button
+                                className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
+                                ${selectedOption === "Someone else" ? "bg-slate-100 text-slate-900" : ""}`}
+                                onClick={() => handleSelect('Someone else')}>
+                                Someone else
+                            </button>
                         </div>
+
 
                         <div className="text-start pt-4 pb-2">
                             <label htmlFor="email">Email</label>
@@ -375,7 +452,7 @@ const Recording = () => {
                     </>
                 ) : (
                     <>
-                        {isRecording ? null : (
+                        {isRecording || isUsingFileUpload ? null : (
                             <>
                                 {timer < (defaultCounterTimer) ? (
                                     <>
@@ -392,13 +469,29 @@ const Recording = () => {
                         )}
                     </>
                 )}
-                {isStopped && !isUploading ? <Button className="mt-10 w-full dark:hover:text-slate-100 dark:hover:bg-slate-700" onClick={uploadVideoToCloudinary}>Upload</Button> : null}
-                {isUploading ? <Progress value={uploadProgress * 100} /> : null}
-                {/* <h1 className="font-bold text-lg pt-4">OR</h1>
-                <input type="file" accept="video/*" ref={videoRef} className="mt-5" onChange={(e) => setUploadVideo(e.target.files[0])}/>
-                <div className="mt-5 ">
-                    <video controls src={videoSrc} className="w-full"/>
-                </div> */}
+                {(isStopped || isUsingFileUpload) && !isUploading ? <Button className="mt-10 w-full dark:hover:text-slate-100 dark:hover:bg-slate-700"
+                    onClick={function () {
+                        if (isUsingFileUpload) {
+                            uploadUploadedVideo()
+                        } else {
+                            uploadRecordedVideo()
+                        }
+                    }}>Upload</Button> : null}
+                {isUploading ? <Progress className="mt-10" value={uploadProgress * 100} /> : null}
+
+                {isUsingFileUpload ? (
+                    <p className="text-sm mt-4">Can't upload a video? <button onClick={function () {
+                        if (isUploading) {
+                            return
+                        }
+                        setIsUsingFileUpload(false)
+                    }} className="underline">Record one instead</button>.</p>
+                ) : (
+                    <p className="text-sm mt-4">Have issues with your recording? <button onClick={function () {
+                        setIsUsingFileUpload(true)
+                        uploadVideoInputRef.current.click()
+                    }} className="underline">Please upload a video instead</button>.</p>
+                )}
             </section>
         </Layout >
     )
