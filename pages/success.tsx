@@ -1,12 +1,21 @@
 import { Layout } from '@/components/layout'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GiCheckMark } from 'react-icons/gi'
 import { GrFacebookOption } from "react-icons/gr";
 import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";
+import { runFireworks } from '@/lib/utils';
+
+
+
 
 const Success = () => {
+
+    useEffect(() => {
+        runFireworks()
+    }, [] ) 
+
     return (
         <>
             <Layout>
