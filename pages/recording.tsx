@@ -53,8 +53,8 @@ const Recording = () => {
     const [isUsingFileUpload, setIsUsingFileUpload] = useState(false)
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
-    const [dateError, setDateError] = useState('')
-    
+    const [dateError, setDateError] = useState('')    
+
 
     const uploadedVideoUrl = useMemo(function () {
         return uploadedVideo ? URL.createObjectURL(uploadedVideo) : null
@@ -70,11 +70,20 @@ const Recording = () => {
         form.append('file', file)
         form.append('cloud_name', 'dq5e0bbl8')
 
-        return Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload', form, {
+
+        try{
+            const response = await Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload', form, {
             onUploadProgress(event) {
                 setUploadProgress(event.progress)
             }
         })
+        console.log(response)
+        return response
+
+        }catch(error){
+            setUploadProgress(0)
+            console.log(error)
+        }
     }
 
     async function uploadUploadedVideo() {
@@ -311,7 +320,7 @@ const Recording = () => {
 
     return (
         <Layout>
-            <section className="container justify-center text-center items-center pt-6  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-12 rounded-xl  pb-6">
+            <section className="container justify-center text-center items-center pt-5  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-5 rounded-xl  pb-6">
                 {(isStopped || isUsingFileUpload) ? null : (
                     <div className="rounded-2xl w-full mb-6 relative">
                         <video className="w-full aspect-video rounded-2xl relative bg-black" ref={videoPlayer} autoPlay muted style={{ width: '800px', height: '298px' }}>
@@ -337,13 +346,12 @@ const Recording = () => {
 
                         {uploadedVideoUrl ? (
                             <video src={uploadedVideoUrl} controls className="w-full aspect-video rounded-2xl relative bg-black">
-
                             </video>
-                        ) : (
+                        ) :  (
                             <button onClick={function () {
                                 uploadVideoInputRef.current.click()
                             }} className="flex items-center justify-center w-full rounded-2xl relative bg-black" style={{ height: '298px' }}>
-                                <span className="font-semibold">
+                                <span className="font-semibold text-white ">
                                     Click to upload a video
                                 </span>
                             </button>
@@ -357,7 +365,6 @@ const Recording = () => {
                     ref={uploadVideoInputRef}
                     onChange={function (event) {
                         const video = event.target.files[0];
-
                         const videoElement = document.createElement('video');
                         videoElement.src = URL.createObjectURL(video);
 
@@ -367,8 +374,7 @@ const Recording = () => {
                             if (videoDuration <= 600) {
                                 setUploadedVideo(video);
                             } else {
-                                console.log('long video')
-                               
+                                console.log('video is more than 10 minutes')
                             }
                         });
                     }}
@@ -449,14 +455,14 @@ const Recording = () => {
                         <div className="flex flex-start space-x-4">
                             <button
                                 className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
-                                ${selectedOption === "Yourself" ? "bg-slate-100 text-slate-900" : ""}`}
+                                ${selectedOption === "Yourself" ? "bg-white  text-black !important" : ""}`}
                                 onClick={() => handleSelect('Yourself')}>
                                 Yourself
                             </button>
 
                             <button
                                 className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
-                                ${selectedOption === "Someone else" ? "bg-slate-100 text-slate-900" : ""}`}
+                                ${selectedOption === "Someone else" ? "bg-white text-black" : ""}`}
                                 onClick={() => handleSelect('Someone else')}>
                                 Someone else
                             </button>
@@ -510,7 +516,6 @@ const Recording = () => {
                         }
                     }}
                     disabled={!email || !deliverIn}
-                    style={{ cursor: (!email || !deliverIn) ? 'not-allowed' : 'pointer' }}
                 >Upload</Button> : null}
                 {isUploading ? <Progress className="mt-10" value={uploadProgress * 100} /> : null}
 
@@ -519,7 +524,11 @@ const Recording = () => {
                         if (isUploading) {
                             return
                         }
-                        setIsUsingFileUpload(false)
+                        if (isRecording) {
+                            stopRecording(); 
+                          }
+                        setIsUsingFileUpload(true)
+                        uploadVideoInputRef.current.click();
                     }} className="underline">Record one instead</button>.</p>
                 ) : (
                     <p className="text-sm mt-4">Have issues with your recording? <button onClick={function () {
