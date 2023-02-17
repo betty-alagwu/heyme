@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress";
+import Success from "./success"
 
 const defaultIntervalTimer = 3000
 const defaultCounterTimer = 4
@@ -52,6 +53,7 @@ const Recording = () => {
     const [isUsingFileUpload, setIsUsingFileUpload] = useState(false)
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
+    const [dateError, setDateError] = useState('')
 
     const uploadedVideoUrl = useMemo(function () {
         return uploadedVideo ? URL.createObjectURL(uploadedVideo) : null
@@ -75,16 +77,29 @@ const Recording = () => {
     }
 
     async function uploadUploadedVideo() {
-
-        setIsUploading(true)
-
-        try {
-            await uploadVideoToCloudinary(uploadedVideo)
-            setComplete(true)
-        } catch (error) {
-
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!emailRegex.test(email)) {
+            setError('Email required');
+        } else {
+            setError('')
+        }
+        if (!deliverIn) {
+            setDateError('Date required');
+        } else if (new Date(deliverIn) < new Date()) {
+            setDateError('Delivery date must be in the future');
+        } else {
+            setDateError('')
         }
 
+        if (!error && !dateError) {
+            setIsUploading(true)
+            try {
+                await uploadVideoToCloudinary(uploadedVideo)
+                setComplete(true)
+            } catch (error) {
+                console.log(error)
+            }
+        }
         setIsUploading(false)
     }
 
@@ -286,13 +301,7 @@ const Recording = () => {
 
     if (complete) {
         return (
-            <Layout>
-                <section>
-                    <div>
-                        <h1>Thank you please share.</h1>
-                    </div>
-                </section>
-            </Layout>
+            <Success />
         )
     }
 
@@ -448,7 +457,9 @@ const Recording = () => {
                             <label htmlFor="deliver-in">Deliver in</label>
                         </div>
                         <Input type="date"
+                            className={dateError ? 'border-red-500 dark:border-red-500' : null}
                             onChange={handleDeliverInChange} />
+                        {dateError && <div className="text-start pt-1 text-sm text-red-500">{dateError}</div>}
                     </>
                 ) : (
                     <>
@@ -469,14 +480,18 @@ const Recording = () => {
                         )}
                     </>
                 )}
-                {(isStopped || isUsingFileUpload) && !isUploading ? <Button className="mt-10 w-full dark:hover:text-slate-100 dark:hover:bg-slate-700"
+                {(isStopped || isUsingFileUpload) && !isUploading ? <Button className={`mt-10 w-full dark:hover:text-slate-100 dark:hover:bg-slate-700`}
+
                     onClick={function () {
                         if (isUsingFileUpload) {
                             uploadUploadedVideo()
                         } else {
                             uploadRecordedVideo()
                         }
-                    }}>Upload</Button> : null}
+                    }}
+                    disabled={!email || !deliverIn}
+                    style={{ cursor: (!email || !deliverIn) ? 'not-allowed' : 'pointer' }}
+                >Upload</Button> : null}
                 {isUploading ? <Progress className="mt-10" value={uploadProgress * 100} /> : null}
 
                 {isUsingFileUpload ? (
