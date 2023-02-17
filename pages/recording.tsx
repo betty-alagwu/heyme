@@ -53,7 +53,8 @@ const Recording = () => {
     const [isUsingFileUpload, setIsUsingFileUpload] = useState(false)
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
-    const [dateError, setDateError] = useState('')    
+    const [dateError, setDateError] = useState('')
+    const [isWebRTCSupported, setIsWebRTCSupported] = useState(true);
 
 
     const uploadedVideoUrl = useMemo(function () {
@@ -71,16 +72,16 @@ const Recording = () => {
         form.append('cloud_name', 'dq5e0bbl8')
 
 
-        try{
+        try {
             const response = await Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload', form, {
-            onUploadProgress(event) {
-                setUploadProgress(event.progress)
-            }
-        })
-        console.log(response)
-        return response
+                onUploadProgress(event) {
+                    setUploadProgress(event.progress)
+                }
+            })
+            console.log(response)
+            return response
 
-        }catch(error){
+        } catch (error) {
             setUploadProgress(0)
             console.log(error)
         }
@@ -302,6 +303,20 @@ const Recording = () => {
         console.log(data)
     };
 
+    useEffect(() => {
+        async function checkWebRTCSupport() {
+            try {
+                await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+                setIsWebRTCSupported(true);
+            } catch (error) {
+                setIsWebRTCSupported(false);
+            }
+        }
+
+        checkWebRTCSupport();
+    }, []);
+
+
 
     useEffect(() => {
         if (typeof document === 'undefined') {
@@ -321,6 +336,16 @@ const Recording = () => {
     return (
         <Layout>
             <section className="container justify-center text-center items-center pt-5  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-5 rounded-xl  pb-6">
+
+                {isWebRTCSupported ? null : (
+                    <div className="bg-yellow-100 border border-yellow-300 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                        <strong className="font-bold">Warning!</strong>
+                        <span className="block sm:inline"> Your device may not be fully compatible with WebRTC, so you might experience some issues when recording. Please consider uploading a video instead.</span>
+                        <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setIsWebRTCSupported(true)}>
+                            <svg className="fill-current h-6 w-6 text-yellow-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 6.066 4.652a1 1 0 00-1.414 1.414L8.586 10l-3.934 3.934a1 1 0 101.414 1.414L10 11.414l3.934 3.934a1 1 0 001.414-1.414L11.414 10l3.934-3.934a1 1 0 000-1.414z" /></svg>
+                        </span>
+                    </div>
+                )}
                 {(isStopped || isUsingFileUpload) ? null : (
                     <div className="rounded-2xl w-full mb-6 relative">
                         <video className="w-full aspect-video rounded-2xl relative bg-black" ref={videoPlayer} autoPlay muted style={{ width: '800px', height: '298px' }}>
@@ -347,7 +372,7 @@ const Recording = () => {
                         {uploadedVideoUrl ? (
                             <video src={uploadedVideoUrl} controls className="w-full aspect-video rounded-2xl relative bg-black">
                             </video>
-                        ) :  (
+                        ) : (
                             <button onClick={function () {
                                 uploadVideoInputRef.current.click()
                             }} className="flex items-center justify-center w-full rounded-2xl relative bg-black" style={{ height: '298px' }}>
@@ -525,8 +550,8 @@ const Recording = () => {
                             return
                         }
                         if (isRecording) {
-                            stopRecording(); 
-                          }
+                            stopRecording();
+                        }
                         setIsUsingFileUpload(true)
                         uploadVideoInputRef.current.click();
                     }} className="underline">Record one instead</button>.</p>
