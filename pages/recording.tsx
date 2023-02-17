@@ -96,6 +96,7 @@ const Recording = () => {
             try {
                 await uploadVideoToCloudinary(uploadedVideo)
                 setComplete(true)
+                window.location.href = '/success'; 
             } catch (error) {
                 console.log(error)
             }
