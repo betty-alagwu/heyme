@@ -54,6 +54,7 @@ const Recording = () => {
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
     const [dateError, setDateError] = useState('')
+    
 
     const uploadedVideoUrl = useMemo(function () {
         return uploadedVideo ? URL.createObjectURL(uploadedVideo) : null
@@ -96,7 +97,7 @@ const Recording = () => {
             try {
                 await uploadVideoToCloudinary(uploadedVideo)
                 setComplete(true)
-                window.location.href = '/success'; 
+                window.location.href = '/success';
             } catch (error) {
                 console.log(error)
             }
@@ -349,11 +350,29 @@ const Recording = () => {
                         )}
                     </>
                 ) : null}
-                <input accept="video/*, .mkv" className='hidden' type='file' ref={uploadVideoInputRef} onChange={function (event) {
-                    const video = event.target.files[0]
-                    // TODO: Validate length of video
-                    setUploadedVideo(video)
-                }} />
+                <input
+                    accept="video/*, .mkv"
+                    className="hidden"
+                    type="file"
+                    ref={uploadVideoInputRef}
+                    onChange={function (event) {
+                        const video = event.target.files[0];
+
+                        const videoElement = document.createElement('video');
+                        videoElement.src = URL.createObjectURL(video);
+
+                        videoElement.addEventListener('loadedmetadata', function () {
+                            // Check if video duration is less than or equal to 10 minutes (600 seconds)
+                            const videoDuration = videoElement.duration || 0;
+                            if (videoDuration <= 600) {
+                                setUploadedVideo(video);
+                            } else {
+                                console.log('long video')
+                               
+                            }
+                        });
+                    }}
+                />
                 {hasPermissionIssues && !isUsingFileUpload ? (
                     <>
                         <h1 className="font-normal text-red-500 text-center text-lg">Please check your camera & microphone </h1>
