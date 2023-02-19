@@ -1,20 +1,19 @@
-import Head from "next/head"
-import Link from "next/link"
 import Axios from 'axios'
-import { detect as detectBrowser, detectOS, BrowserInfo } from 'detect-browser'
-import React, { useState, useEffect, useRef, useMemo, MouseEventHandler, MutableRefObject } from 'react'
-import { BsExclamationTriangleFill, BsRecordCircle } from "react-icons/bs";
+import { detect as detectBrowser } from 'detect-browser'
+import React, { useState, useEffect, useRef, useMemo, MutableRefObject } from 'react'
+import { BsExclamationTriangleFill } from "react-icons/bs";
 import { ImStop } from "react-icons/im";
 
 import { IoIosRadioButtonOn } from "react-icons/io";
 // import { siteConfig } from "@/config/site"
 import { Layout } from "@/components/layout"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input"
 
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress";
 import Success from "./success"
+import useInterval from "@/lib/useInterval"
 
 const defaultIntervalTimer = 3000
 const defaultCounterTimer = 4
@@ -38,7 +37,7 @@ const Recording = () => {
     const [selectedCamera, setSelectedCamera] = useState<string | null>(null)
     const [selectedMicrophone, setSelectedMicrophone] = useState<string | null>(null)
     const [hasPermissionIssues, setHasPermissionIssues] = useState(false)
-    const [timeElapsed, setTimeElapsed] = useState(600);
+    const [timeElapsed, setTimeElapsed] = useState(300);
     const [uploadVideo, setUploadVideo] = useState<File | null>(null)
     const [videoSrc, setVideoSrc] = useState('')
     const videoRef = useRef<HTMLInputElement>()
@@ -55,7 +54,8 @@ const Recording = () => {
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
     const [dateError, setDateError] = useState('')
     const [isWebRTCSupported, setIsWebRTCSupported] = useState(true);
-
+    const mediaStreamRef = useRef<MediaStream>()
+    const setIntervalRef = useRef<NodeJS.Timer>()
 
     const uploadedVideoUrl = useMemo(function () {
         return uploadedVideo ? URL.createObjectURL(uploadedVideo) : null
@@ -71,37 +71,21 @@ const Recording = () => {
         form.append('file', file)
         form.append('cloud_name', 'dq5e0bbl8')
 
-
         try {
             const response = await Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload', form, {
                 onUploadProgress(event) {
                     setUploadProgress(event.progress)
                 }
             })
-            console.log(response)
+            setIsRecording(false)
             return response
 
         } catch (error) {
             setUploadProgress(0)
-            console.log(error)
         }
     }
 
     async function uploadUploadedVideo() {
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!emailRegex.test(email)) {
-            setError('Email required');
-        } else {
-            setError('')
-        }
-        if (!deliverIn) {
-            setDateError('Date required');
-        } else if (new Date(deliverIn) < new Date()) {
-            setDateError('Delivery date must be in the future');
-        } else {
-            setDateError('')
-        }
-
         if (!error && !dateError) {
             setIsUploading(true)
             try {
@@ -112,7 +96,7 @@ const Recording = () => {
                 console.log(error)
             }
         }
-        setIsUploading(false)
+        return setIsUploading(false)
     }
 
     async function uploadRecordedVideo() {
@@ -130,7 +114,6 @@ const Recording = () => {
 
         setIsUploading(false)
     }
-
 
     function stopRecording() {
         setIsStopped(true)
@@ -153,7 +136,6 @@ const Recording = () => {
 
     function registerRecorderEventListeners(recorder: MediaRecorder) {
         recorder.addEventListener('dataavailable', function (event) {
-            console.log('@recorder.dataavailable', event)
             if (event.data.size > 0) {
                 mediaChunks.current = [...mediaChunks.current, event.data]
             }
@@ -198,24 +180,39 @@ const Recording = () => {
     }
 
     async function accessUserDevices(cameraDeviceId?: string, microphoneDeviceId?: string) {
-        const hasIssues = await getDevicePermissions()
 
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-            audio: microphoneDeviceId ? {
-                deviceId: microphoneDeviceId
-            } : true,
-            video: cameraDeviceId ? {
-                deviceId: cameraDeviceId
-            } : true,
-        })
+        let mediaStream: MediaStream
 
-        videoPlayer.current.srcObject = mediaStream
+        try {
+            await getDevicePermissions()
 
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                audio: microphoneDeviceId ? {
+                    deviceId: microphoneDeviceId
+                } : true,
+                video: cameraDeviceId ? {
+                    deviceId: cameraDeviceId
+                } : true,
+            })
+        } catch (e) {
+            if (e.name === 'NotAllowedError') {
+                // handle case where user denied permission.
+                return
+            }
 
+            // handle case where webrtc is not supported
+            setIsWebRTCSupported(false)
+            return
+        }
+
+        if (videoPlayer.current) {
+            videoPlayer.current.srcObject = mediaStream
+        }
 
         // user granted access.
         const recorder = new MediaRecorder(mediaStream)
 
+        mediaStreamRef.current = mediaStream
         // register recorder event listeners.
         registerRecorderEventListeners(recorder)
 
@@ -223,6 +220,7 @@ const Recording = () => {
 
         await enumerateDevices()
     }
+
 
     useEffect(function () {
         accessUserDevices(selectedCamera, selectedMicrophone)
@@ -241,30 +239,41 @@ const Recording = () => {
     const minutes = Math.floor(timeElapsed / 60)
     const seconds = timeElapsed % 60
 
+    useInterval(function () {
+        setTimeElapsed(currentTimeElapsed => {
+            if (currentTimeElapsed === 0) {
+                setIsStopped(true)
 
-    useEffect(() => {
-        let interval = null
+                return 0
+            }
+            return currentTimeElapsed - 1
+        })
+    }, isRecording ? 1000 : null)
+    // useEffect(() => {
+    //     let interval: NodeJS.Timer = null
 
-        if (isRecording) {
-            interval = setInterval(() => {
-                setTimeElapsed(timeElapsed - 1)
-                if (timeElapsed === 0) {
-                    setIsStopped(true)
-                }
-            }, 1000)
-        }
-        return () => clearInterval(interval);
+    //     if (isRecording && !setIntervalRef.current) {
+    //         interval = setInterval(function () {
+    //             setTimeElapsed(currentTimeElapsed => {
+    //                 if (currentTimeElapsed === 0) {
+    //                     setIsStopped(true)
 
-    }), [isRecording, timeElapsed]
+    //                     return 0
+    //                 }
+    //                 return currentTimeElapsed - 1
+    //             })
+    //         }, 1000)
 
+    //         setIntervalRef.current = interval
+    //     }
 
-
+    //     return () => interval ? clearInterval(interval) : undefined;
+    // }), [isRecording]
 
     useEffect(() => {
         const src = URL.createObjectURL(new Blob([uploadVideo], { type: 'video/mp4' }))
         setVideoSrc(src)
     }, [uploadVideo])
-
 
     const handleSelect = (option: string) => {
         setSelectedOption(option)
@@ -277,20 +286,31 @@ const Recording = () => {
 
     const handleBlur = () => {
         const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!emailRegex.test(email)) {
-            setError('Email required');
-        } else {
-            setError('')
+        if (!email) {
+            setError('Email required')
+        } else if (!emailRegex.test(email)) {
+            setError('Invalid email')
         }
     };
+
+    const handleDateBlur = () => {
+        if (!deliverIn) {
+            setDateError('Date required')
+        } else {
+            setDateError('')
+        }
+    }
 
 
     const handleDeliverInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setDeliverIn(event.target.value);
+
+        if (!deliverIn || new Date(deliverIn) < new Date()) {
+            setDateError('Please select a date in the future');
+        } else {
+            setDateError('');
+        }
     }
-
-
-
 
     const handleUpload = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -302,20 +322,6 @@ const Recording = () => {
         // send data to server
         console.log(data)
     };
-
-    useEffect(() => {
-        async function checkWebRTCSupport() {
-            try {
-                await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-                setIsWebRTCSupported(true);
-            } catch (error) {
-                setIsWebRTCSupported(false);
-            }
-        }
-
-        checkWebRTCSupport();
-    }, []);
-
 
 
     useEffect(() => {
@@ -331,16 +337,51 @@ const Recording = () => {
         )
     }
 
-
-
     return (
         <Layout>
             <section className="container justify-center text-center items-center pt-5  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-5 rounded-xl  pb-6">
 
                 {isWebRTCSupported ? null : (
-                    <div className="bg-yellow-100 border border-yellow-300 text-yellow-700 px-4 py-3 rounded relative" role="alert">
+                    <div className="bg-yellow-100 border border-yellow-300 text-yellow-700 px-4 py-3 rounded relative mb-6" role="alert">
                         <strong className="font-bold">Warning!</strong>
-                        <span className="block sm:inline"> Your device may not be fully compatible with WebRTC, so you might experience some issues when recording. Please consider uploading a video instead.</span>
+                        <span className="block sm:inline"> Your device may not be fully compatible with WebRTC, so you might experience some issues when recording. Please consider <button onClick={function () {
+                        if (isRecording) {
+                            mediaRecorder.current.stop()
+                            setIsRecording(false)
+                            setTimeElapsed(300)
+                            mediaChunks.current = []
+                        }
+                        if (mediaStreamRef.current) {
+                            mediaStreamRef.current.getTracks().forEach(track => {
+                                track.stop()
+                            })
+                        }
+                        setTimer(defaultCounterTimer)
+                        setIsUsingFileUpload(true)
+                        uploadVideoInputRef.current.click()
+                    }} className="underline">uploading a video</button> instead.</span>
+                        <input
+                            accept="video/*, .mkv"
+                            className="hidden"
+                            type="file"
+                            ref={uploadVideoInputRef}
+                            onChange={function (event) {
+                                const video = event.target.files[0];
+                                if (!video) { return }
+                                const videoElement = document.createElement('video');
+                                videoElement.src = URL.createObjectURL(video);
+
+                                videoElement.addEventListener('loadedmetadata', function () {
+                                    // Check if video duration is less than or equal to 10 minutes (600 seconds)
+                                    const videoDuration = videoElement.duration || 0;
+                                    if (videoDuration <= 300) {
+                                        setUploadedVideo(video);
+                                    } else {
+                                        console.log('video is more than 10 minutes')
+                                    }
+                                });
+                            }}
+                        />
                         <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setIsWebRTCSupported(true)}>
                             <svg className="fill-current h-6 w-6 text-yellow-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 6.066 4.652a1 1 0 00-1.414 1.414L8.586 10l-3.934 3.934a1 1 0 101.414 1.414L10 11.414l3.934 3.934a1 1 0 001.414-1.414L11.414 10l3.934-3.934a1 1 0 000-1.414z" /></svg>
                         </span>
@@ -368,7 +409,6 @@ const Recording = () => {
                 )}
                 {isUsingFileUpload ? (
                     <>
-
                         {uploadedVideoUrl ? (
                             <video src={uploadedVideoUrl} controls className="w-full aspect-video rounded-2xl relative bg-black">
                             </video>
@@ -390,13 +430,13 @@ const Recording = () => {
                     ref={uploadVideoInputRef}
                     onChange={function (event) {
                         const video = event.target.files[0];
+                        if (!video) { return }
                         const videoElement = document.createElement('video');
                         videoElement.src = URL.createObjectURL(video);
 
                         videoElement.addEventListener('loadedmetadata', function () {
-                            // Check if video duration is less than or equal to 10 minutes (600 seconds)
                             const videoDuration = videoElement.duration || 0;
-                            if (videoDuration <= 600) {
+                            if (videoDuration <= 300) {
                                 setUploadedVideo(video);
                             } else {
                                 console.log('video is more than 10 minutes')
@@ -407,7 +447,7 @@ const Recording = () => {
                 {hasPermissionIssues && !isUsingFileUpload ? (
                     <>
                         <h1 className="font-normal text-red-500 text-center text-lg">Please check your camera & microphone </h1>
-                        <p className=" font-normal dark:text-white text-center pt-10">Oops! It looks like we don&lsquo;t have access to your camera and microphone.
+                        <p className=" font-normal dark:text-white text-center pt-6">Oops! It looks like we don&lsquo;t have access to your camera and microphone.
                             To use this feature, please grant access in your browser settings.</p>
                     </>
                 ) : null}
@@ -463,9 +503,7 @@ const Recording = () => {
                     </>
                 )}
 
-
-
-                {isStopped && videoBlobUrl ? (
+                {isStopped && videoBlobUrl && !isUsingFileUpload ? (
                     <div className="w-full rounded-2xl">
                         <video className="w-full aspect-video rounded-2xl relative" controls src={videoBlobUrl} style={{ width: '800px', height: '298px' }}>
                         </video>
@@ -501,7 +539,8 @@ const Recording = () => {
                             placeholder="Email"
                             className={error ? 'dark:placeholder:text-slate-300 placeholder:text-gray-700 border-red-500 dark:border-red-500' : 'dark:placeholder:text-white placeholder:text-gray-700'}
                             onChange={handleChange}
-                            onBlur={handleBlur} />
+                            onBlur={handleBlur}
+                        />
                         {error && <div className="text-start pt-1 text-sm text-red-500">{error}</div>}
 
                         <div className="text-start pt-4 pb-2">
@@ -509,6 +548,7 @@ const Recording = () => {
                         </div>
                         <Input type="date"
                             className={dateError ? 'border-red-500 dark:border-red-500' : null}
+                            onBlur={handleDateBlur}
                             onChange={handleDeliverInChange} />
                         {dateError && <div className="text-start pt-1 text-sm text-red-500">{dateError}</div>}
                     </>
@@ -546,17 +586,25 @@ const Recording = () => {
 
                 {isUsingFileUpload ? (
                     <p className="text-sm mt-4">Can&apos;t upload a video? <button onClick={function () {
-                        if (isUploading) {
-                            return
-                        }
-                        if (isRecording) {
-                            stopRecording();
-                        }
-                        setIsUsingFileUpload(true)
-                        uploadVideoInputRef.current.click();
+                        setIsUsingFileUpload(false)
+                        accessUserDevices()
+                        setTimeElapsed(300)
+                        setUploadedVideo(null)
                     }} className="underline">Record one instead</button>.</p>
                 ) : (
                     <p className="text-sm mt-4">Have issues with your recording? <button onClick={function () {
+                        if (isRecording) {
+                            mediaRecorder.current.stop()
+                            setIsRecording(false)
+                            setTimeElapsed(300)
+                            mediaChunks.current = []
+                        }
+                        if (mediaStreamRef.current) {
+                            mediaStreamRef.current.getTracks().forEach(track => {
+                                track.stop()
+                            })
+                        }
+                        setTimer(defaultCounterTimer)
                         setIsUsingFileUpload(true)
                         uploadVideoInputRef.current.click()
                     }} className="underline">Please upload a video instead</button>.</p>
@@ -569,3 +617,19 @@ const Recording = () => {
 export default Recording
 
 
+
+
+// if the user is recording, and click on "upload a video instead" stop the recording and the camera should be off
+// 1.  stop the recording
+// 2.  reset the timer
+// 3. set the isRecording state to false 
+// 4 set the usingfileupload to true
+
+// while uploading a file and the user click on "record one instead"  the recording should start from begining and the 
+//  recorder timer should reset and start from begining as well
+
+// 1. start the recording
+// 2. reset the timer
+// 3. update the state of the recording to true
+// 4. update the state of the isusingfileupload to false
+// 5. 
