@@ -19,6 +19,10 @@ import useInterval from "@/lib/useInterval"
 const defaultIntervalTimer = 3000
 const defaultCounterTimer = 4
 
+const browserInfo = detectBrowser()
+
+const isIos = browserInfo.os === 'iOS'
+
 const Recording = () => {
     // 1. access user camera and microphone using getUserMedia()
     // 2. If user grants access to camera and micrphone, create media recorder
@@ -49,8 +53,8 @@ const Recording = () => {
     const [uploadProgress, setUploadProgress] = useState(0)
     const [isUploading, setIsUploading] = useState(false)
     const [complete, setComplete] = useState(false)
-    const [browser, setBrowser] = useState<ReturnType<typeof detectBrowser> | null>(null);
-    const [isUsingFileUpload, setIsUsingFileUpload] = useState(true)
+    const [browser, setBrowser] = useState<ReturnType<typeof detectBrowser>>(browserInfo);
+    const [isUsingFileUpload, setIsUsingFileUpload] = useState(isIos)
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
     const [dateError, setDateError] = useState('')
@@ -161,28 +165,10 @@ const Recording = () => {
         setDevices(enumeratedDevices)
     }
 
-    async function getDevicePermissions() {
-        const [cameraPermissions, microphonePermissions] = await Promise.all([
-            // @ts-ignore
-            navigator.permissions.query({ name: 'camera' }),
-            // @ts-ignore
-            navigator.permissions.query({ name: 'microphone' })
-        ])
-
-        if (cameraPermissions.state === 'denied' || microphonePermissions.state === 'denied') {
-            setHasPermissionIssues(true)
-            return true
-        }
-        return false
-    }
-
     async function accessUserDevices(cameraDeviceId?: string, microphoneDeviceId?: string) {
-
         let mediaStream: MediaStream
 
         try {
-            await getDevicePermissions()
-
             mediaStream = await navigator.mediaDevices.getUserMedia({
                 audio: microphoneDeviceId ? {
                     deviceId: microphoneDeviceId
@@ -192,8 +178,10 @@ const Recording = () => {
                 } : true,
             })
         } catch (e) {
+            console.error(e.name)
             if (e.name === 'NotAllowedError') {
-                // handle case where user denied permission.
+                // handle case where user denied permission.'
+                setHasPermissionIssues(true)
                 return
             }
             // handle case where webrtc is not supported
@@ -219,11 +207,13 @@ const Recording = () => {
 
 
     useEffect(function () {
-        accessUserDevices(selectedCamera, selectedMicrophone)
-            .catch(() => {
-                setHasPermissionIssues(true)
-            })
-    }, [selectedCamera, selectedMicrophone])
+        if (!isUsingFileUpload) {
+            accessUserDevices(selectedCamera, selectedMicrophone)
+                .catch(() => {
+                    setHasPermissionIssues(true)
+                })
+        }
+    }, [selectedCamera, selectedMicrophone, isUsingFileUpload])
 
     const cameras = devices.filter(device => device.kind === 'videoinput')
     const microphones = devices.filter(device => device.kind === 'audioinput')
@@ -302,14 +292,6 @@ const Recording = () => {
         // send data to server
         console.log(data)
     };
-
-
-    useEffect(() => {
-        if (typeof document === 'undefined') {
-            return
-        }
-        setBrowser(detectBrowser())
-    }, []);
 
     if (complete) {
         return (
@@ -565,13 +547,17 @@ const Recording = () => {
                 >Upload</Button> : null}
                 {isUploading ? <Progress className="mt-10" value={uploadProgress * 100} /> : null}
 
-                {isUsingFileUpload ? (
-                    <p className="text-sm mt-4">Can&apos;t upload a video? <button onClick={function () {
-                        setIsUsingFileUpload(false)
-                        accessUserDevices()
-                        setTimeElapsed(300)
-                        setUploadedVideo(null)
-                    }} className="underline">Record one instead</button>.</p>
+                {!isUsingFileUpload ? (
+                    <>
+                        {isIos ? null : (
+                            <p className="text-sm mt-4">Can&apos;t upload a video? <button onClick={function () {
+                                setIsUsingFileUpload(false)
+                                accessUserDevices()
+                                setTimeElapsed(300)
+                                setUploadedVideo(null)
+                            }} className="underline">Record one instead</button>.</p>
+                        )}
+                    </>
                 ) : (
                     <p className="text-sm mt-4">Have issues with your recording? <button onClick={handleVideoInput} className="underline">Please upload a video instead</button>.</p>
                 )}
