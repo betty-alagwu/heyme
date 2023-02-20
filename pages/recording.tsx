@@ -390,6 +390,7 @@ const Recording = () => {
                     accept="video/*, .mkv"
                     className="hidden"
                     type="file"
+                    capture='user'
                     ref={uploadVideoInputRef}
                     onChange={function (event) {
                         const video = event.target.files[0];
