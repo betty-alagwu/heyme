@@ -334,6 +334,14 @@ const Recording = () => {
         uploadVideoInputRef.current.click()
     }
 
+
+    // on light mode the selected option background should be dark and text should be white
+    // on dark mode the selected option background should be white and text should be dark
+    //  default background should be dark and text should be white on light mode 
+    // dafualt background should be white and text should be dark on dark mode
+
+
+
     return (
         <Layout>
             <section className="container justify-center text-center items-center pt-5  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-5 rounded-xl  pb-6">
@@ -491,14 +499,14 @@ const Recording = () => {
                         <div className="flex flex-start space-x-4">
                             <button
                                 className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
-                                ${selectedOption === "Yourself" ? "bg-black  text-white dark:bg-white dark:text-black !important" : ""}`}
+                                ${selectedOption === "Yourself" ? "bg-slate-700 text-white dark:bg-white dark:text-black" : ""}`}
                                 onClick={() => handleSelect('Yourself')}>
                                 Yourself
                             </button>
 
                             <button
                                 className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
-                                ${selectedOption === "Someone else" ? "bg-white text-black" : ""}`}
+                                ${selectedOption === "Someone else" ? "bg-slate-700 text-white dark:bg-white dark:text-black" : ""}`}
                                 onClick={() => handleSelect('Someone else')}>
                                 Someone else
                             </button>
