@@ -15,6 +15,7 @@ import { Progress } from "@/components/ui/progress";
 import Success from "./success"
 import useInterval from "@/lib/useInterval"
 
+
 const defaultIntervalTimer = 3000
 const defaultCounterTimer = 4
 
@@ -55,7 +56,7 @@ const Recording = () => {
     const [dateError, setDateError] = useState('')
     const [isWebRTCSupported, setIsWebRTCSupported] = useState(true);
     const mediaStreamRef = useRef<MediaStream>()
-    const setIntervalRef = useRef<NodeJS.Timer>()
+    const [uploadError, setUploadError] = useState('')
 
     const uploadedVideoUrl = useMemo(function () {
         return uploadedVideo ? URL.createObjectURL(uploadedVideo) : null
@@ -111,7 +112,6 @@ const Recording = () => {
         } catch (error) {
 
         }
-
         setIsUploading(false)
     }
 
@@ -158,7 +158,6 @@ const Recording = () => {
 
     async function enumerateDevices() {
         const enumeratedDevices = await navigator.mediaDevices.enumerateDevices()
-
         setDevices(enumeratedDevices)
     }
 
@@ -172,10 +171,8 @@ const Recording = () => {
 
         if (cameraPermissions.state === 'denied' || microphonePermissions.state === 'denied') {
             setHasPermissionIssues(true)
-
             return true
         }
-
         return false
     }
 
@@ -199,7 +196,6 @@ const Recording = () => {
                 // handle case where user denied permission.
                 return
             }
-
             // handle case where webrtc is not supported
             setIsWebRTCSupported(false)
             return
@@ -249,26 +245,6 @@ const Recording = () => {
             return currentTimeElapsed - 1
         })
     }, isRecording ? 1000 : null)
-    // useEffect(() => {
-    //     let interval: NodeJS.Timer = null
-
-    //     if (isRecording && !setIntervalRef.current) {
-    //         interval = setInterval(function () {
-    //             setTimeElapsed(currentTimeElapsed => {
-    //                 if (currentTimeElapsed === 0) {
-    //                     setIsStopped(true)
-
-    //                     return 0
-    //                 }
-    //                 return currentTimeElapsed - 1
-    //             })
-    //         }, 1000)
-
-    //         setIntervalRef.current = interval
-    //     }
-
-    //     return () => interval ? clearInterval(interval) : undefined;
-    // }), [isRecording]
 
     useEffect(() => {
         const src = URL.createObjectURL(new Blob([uploadVideo], { type: 'video/mp4' }))
@@ -295,22 +271,26 @@ const Recording = () => {
 
     const handleDateBlur = () => {
         if (!deliverIn) {
-            setDateError('Date required')
-        } else {
-            setDateError('')
+            setDateError('Date required');
         }
     }
 
 
     const handleDeliverInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedDate = new Date(event.target.value);
+        const currentDate = new Date();
+
         setDeliverIn(event.target.value);
 
-        if (!deliverIn || new Date(deliverIn) < new Date()) {
+        if (!event.target.value) {
+            setDateError('Date required');
+        } else if (selectedDate < currentDate) {
             setDateError('Please select a date in the future');
         } else {
-            setDateError('');
+            setDateError(null);
         }
-    }
+        setDeliverIn(event.target.value);
+    };
 
     const handleUpload = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -337,55 +317,38 @@ const Recording = () => {
         )
     }
 
+    const handleVideoInput = () => {
+        if (isRecording) {
+            mediaRecorder.current.stop()
+            setIsRecording(false)
+            setTimeElapsed(300)
+            mediaChunks.current = []
+        }
+        if (mediaStreamRef.current) {
+            mediaStreamRef.current.getTracks().forEach(track => {
+                track.stop()
+            })
+        }
+        setTimer(defaultCounterTimer)
+        setIsUsingFileUpload(true)
+        uploadVideoInputRef.current.click()
+    }
+
     return (
         <Layout>
             <section className="container justify-center text-center items-center pt-5  md:pb-7  max-w-md border-slate-100 bg-white dark:bg-slate-800 dark:border-slate-800 shadow-md my-5 rounded-xl  pb-6">
 
                 {isWebRTCSupported ? null : (
-                    <div className="bg-yellow-100 border border-yellow-300 text-yellow-700 px-4 py-3 rounded relative mb-6" role="alert">
-                        <strong className="font-bold">Warning!</strong>
-                        <span className="block sm:inline"> Your device may not be fully compatible with WebRTC, so you might experience some issues when recording. Please consider <button onClick={function () {
-                        if (isRecording) {
-                            mediaRecorder.current.stop()
-                            setIsRecording(false)
-                            setTimeElapsed(300)
-                            mediaChunks.current = []
-                        }
-                        if (mediaStreamRef.current) {
-                            mediaStreamRef.current.getTracks().forEach(track => {
-                                track.stop()
-                            })
-                        }
-                        setTimer(defaultCounterTimer)
-                        setIsUsingFileUpload(true)
-                        uploadVideoInputRef.current.click()
-                    }} className="underline">uploading a video</button> instead.</span>
-                        <input
-                            accept="video/*, .mkv"
-                            className="hidden"
-                            type="file"
-                            ref={uploadVideoInputRef}
-                            onChange={function (event) {
-                                const video = event.target.files[0];
-                                if (!video) { return }
-                                const videoElement = document.createElement('video');
-                                videoElement.src = URL.createObjectURL(video);
+                    <>
 
-                                videoElement.addEventListener('loadedmetadata', function () {
-                                    // Check if video duration is less than or equal to 10 minutes (600 seconds)
-                                    const videoDuration = videoElement.duration || 0;
-                                    if (videoDuration <= 300) {
-                                        setUploadedVideo(video);
-                                    } else {
-                                        console.log('video is more than 10 minutes')
-                                    }
-                                });
-                            }}
-                        />
-                        <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setIsWebRTCSupported(true)}>
-                            <svg className="fill-current h-6 w-6 text-yellow-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 6.066 4.652a1 1 0 00-1.414 1.414L8.586 10l-3.934 3.934a1 1 0 101.414 1.414L10 11.414l3.934 3.934a1 1 0 001.414-1.414L11.414 10l3.934-3.934a1 1 0 000-1.414z" /></svg>
-                        </span>
-                    </div>
+                        <div className="bg-yellow-100 border border-yellow-300 text-yellow-700 px-4 py-3 rounded relative mb-6" role="alert">
+                            <strong className="font-bold">Warning!</strong>
+                            <span className="block sm:inline"> Your device may not be fully compatible with WebRTC, so you might experience some issues when recording. Please consider <button onClick={handleVideoInput} className="underline">uploading a video</button> instead.</span>
+                            <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setIsWebRTCSupported(true)}>
+                                <svg className="fill-current h-6 w-6 text-yellow-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 6.066 4.652a1 1 0 00-1.414 1.414L8.586 10l-3.934 3.934a1 1 0 101.414 1.414L10 11.414l3.934 3.934a1 1 0 001.414-1.414L11.414 10l3.934-3.934a1 1 0 000-1.414z" /></svg>
+                            </span>
+                        </div>
+                    </>
                 )}
                 {(isStopped || isUsingFileUpload) ? null : (
                     <div className="rounded-2xl w-full mb-6 relative">
@@ -438,8 +401,9 @@ const Recording = () => {
                             const videoDuration = videoElement.duration || 0;
                             if (videoDuration <= 300) {
                                 setUploadedVideo(video);
+                                setUploadError('')
                             } else {
-                                console.log('video is more than 10 minutes')
+                                setUploadError('The video you uploaded is more than 5 miniutes')
                             }
                         });
                     }}
@@ -457,7 +421,7 @@ const Recording = () => {
                             <>
                                 {isStopped ? null : (
                                     <p className="text-sm mb-6">
-                                        You will have 10 minutes to record a message. After 10 minutes the video will automatically stop.
+                                        You will have 5 minutes to record a message. After 5 minutes the video will automatically stop.
                                     </p>
                                 )}
                             </>
@@ -511,7 +475,15 @@ const Recording = () => {
                 ) : null}
                 {(isStopped || isUsingFileUpload) ? (
                     <>
-                        <div className="font-bold text-lg pt-5">Send your recording to the future</div>
+                        {uploadError ? (
+                            <div className="text-red-500 pt-5 text-sm">
+                                {uploadError}
+                            </div>
+                        ) : (
+                            <>
+                                <div className="font-bold text-lg pt-5">Send your recording to the future</div>
+                            </>
+                        )}
                         <div className="text-start pt-4 pb-2">
                             <label htmlFor="sending-to">Sending to</label>
                         </div>
@@ -580,7 +552,7 @@ const Recording = () => {
                             uploadRecordedVideo()
                         }
                     }}
-                    disabled={!email || !deliverIn}
+                    disabled={!email || !deliverIn || !!error || !!dateError}
                 >Upload</Button> : null}
                 {isUploading ? <Progress className="mt-10" value={uploadProgress * 100} /> : null}
 
@@ -592,22 +564,7 @@ const Recording = () => {
                         setUploadedVideo(null)
                     }} className="underline">Record one instead</button>.</p>
                 ) : (
-                    <p className="text-sm mt-4">Have issues with your recording? <button onClick={function () {
-                        if (isRecording) {
-                            mediaRecorder.current.stop()
-                            setIsRecording(false)
-                            setTimeElapsed(300)
-                            mediaChunks.current = []
-                        }
-                        if (mediaStreamRef.current) {
-                            mediaStreamRef.current.getTracks().forEach(track => {
-                                track.stop()
-                            })
-                        }
-                        setTimer(defaultCounterTimer)
-                        setIsUsingFileUpload(true)
-                        uploadVideoInputRef.current.click()
-                    }} className="underline">Please upload a video instead</button>.</p>
+                    <p className="text-sm mt-4">Have issues with your recording? <button onClick={handleVideoInput} className="underline">Please upload a video instead</button>.</p>
                 )}
             </section>
         </Layout >
@@ -615,21 +572,3 @@ const Recording = () => {
 }
 
 export default Recording
-
-
-
-
-// if the user is recording, and click on "upload a video instead" stop the recording and the camera should be off
-// 1.  stop the recording
-// 2.  reset the timer
-// 3. set the isRecording state to false 
-// 4 set the usingfileupload to true
-
-// while uploading a file and the user click on "record one instead"  the recording should start from begining and the 
-//  recorder timer should reset and start from begining as well
-
-// 1. start the recording
-// 2. reset the timer
-// 3. update the state of the recording to true
-// 4. update the state of the isusingfileupload to false
-// 5. 
