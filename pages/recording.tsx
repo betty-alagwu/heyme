@@ -491,7 +491,7 @@ const Recording = () => {
                         <div className="flex flex-start space-x-4">
                             <button
                                 className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
-                                ${selectedOption === "Yourself" ? "bg-white  text-black !important" : ""}`}
+                                ${selectedOption === "Yourself" ? "bg-black  text-white dark:bg-white dark:text-black !important" : ""}`}
                                 onClick={() => handleSelect('Yourself')}>
                                 Yourself
                             </button>
