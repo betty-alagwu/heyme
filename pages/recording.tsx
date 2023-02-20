@@ -498,15 +498,15 @@ const Recording = () => {
                         </div>
                         <div className="flex flex-start space-x-4">
                             <button
-                                className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
-                                ${selectedOption === "Yourself" ? "bg-slate-700 text-white dark:bg-white dark:text-black" : ""}`}
+                                className={`inline-flex items-center rounded-full bg-slate-100 text-black dark:bg-slate-700 dark:text-white px-2.5 py-1 text-xs font-semibold  transition-colors 
+                                ${selectedOption === "Yourself" ? "bg-slate-700 text-slate-100 dark:bg-white dark:text-black" : ""}`}
                                 onClick={() => handleSelect('Yourself')}>
                                 Yourself
                             </button>
 
                             <button
-                                className={`inline-flex items-center rounded-full bg-slate-700 px-2.5 py-1 text-xs font-semibold text-white transition-colors 
-                                ${selectedOption === "Someone else" ? "bg-slate-700 text-white dark:bg-white dark:text-black" : ""}`}
+                                className={`inline-flex items-center rounded-full bg-slate-100 text-black dark:bg-slate-700 dark:text-white px-2.5 py-1 text-xs font-semibold  transition-colors 
+                                ${selectedOption === "Someone else" ? "bg-slate-700 text-slate-100 dark:bg-white dark:text-black" : ""}`}
                                 onClick={() => handleSelect('Someone else')}>
                                 Someone else
                             </button>
