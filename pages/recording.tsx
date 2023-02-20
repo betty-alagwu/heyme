@@ -50,7 +50,7 @@ const Recording = () => {
     const [isUploading, setIsUploading] = useState(false)
     const [complete, setComplete] = useState(false)
     const [browser, setBrowser] = useState<ReturnType<typeof detectBrowser> | null>(null);
-    const [isUsingFileUpload, setIsUsingFileUpload] = useState(false)
+    const [isUsingFileUpload, setIsUsingFileUpload] = useState(true)
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
     const [dateError, setDateError] = useState('')
