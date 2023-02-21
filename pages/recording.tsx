@@ -42,7 +42,7 @@ const Recording = () => {
     const [selectedCamera, setSelectedCamera] = useState<string | null>(null)
     const [selectedMicrophone, setSelectedMicrophone] = useState<string | null>(null)
     const [hasPermissionIssues, setHasPermissionIssues] = useState(false)
-    const [timeElapsed, setTimeElapsed] = useState(300);
+    const [timeElapsed, setTimeElapsed] = useState(5);
     const [uploadVideo, setUploadVideo] = useState<File | null>(null)
     const [videoSrc, setVideoSrc] = useState('')
     const videoRef = useRef<HTMLInputElement>()
@@ -61,6 +61,7 @@ const Recording = () => {
     const [isWebRTCSupported, setIsWebRTCSupported] = useState(true);
     const mediaStreamRef = useRef<MediaStream>()
     const [uploadError, setUploadError] = useState('')
+    const [uploadToCloudinaryError, setUploadToCloudinaryError] = useState('')
 
     const uploadedVideoUrl = useMemo(function () {
         return uploadedVideo ? URL.createObjectURL(uploadedVideo) : null
@@ -87,6 +88,7 @@ const Recording = () => {
 
         } catch (error) {
             setUploadProgress(0)
+            setUploadToCloudinaryError('Video failed to upload, please try again!')
         }
     }
 
@@ -120,9 +122,17 @@ const Recording = () => {
     }
 
     function stopRecording() {
-        setIsStopped(true)
-        setIsRecording(false)
-        mediaRecorder.current.stop()
+        if (mediaRecorder.current.state === 'recording') {
+            mediaRecorder.current.stop()
+        }
+
+        if (!isStopped) {
+            setIsStopped(true)
+        }
+
+        if (isRecording) {
+            setIsRecording(false)
+        }
     }
 
     function startRecording() {
@@ -147,6 +157,7 @@ const Recording = () => {
 
         recorder.addEventListener('stop', function (event) {
             // trigger upload to server.
+            console.log('@recorder.stop', event)
 
             setVideoBlobUrl(
                 URL.createObjectURL(
@@ -225,10 +236,12 @@ const Recording = () => {
     const minutes = Math.floor(timeElapsed / 60)
     const seconds = timeElapsed % 60
 
+    console.log({ isRecording, isStopped })
+
     useInterval(function () {
         setTimeElapsed(currentTimeElapsed => {
             if (currentTimeElapsed === 0) {
-                setIsStopped(true)
+                stopRecording()
 
                 return 0
             }
@@ -467,9 +480,18 @@ const Recording = () => {
                 {(isStopped || isUsingFileUpload) ? (
                     <>
                         {uploadError ? (
-                            <div className="text-red-500 pt-5 text-sm">
-                                {uploadError}
-                            </div>
+                            <>
+                                <div className="text-red-500 pt-5 text-sm">
+                                    {uploadError}
+                                </div>
+                                <>
+                                    {uploadToCloudinaryError ? (
+                                        <div className="text-red-500 pt-5 text-sm
+                                    "> {uploadToCloudinaryError} </div>
+                                    ) : null}
+                                </>
+                            </>
+
                         ) : (
                             <>
                                 <div className="font-bold text-lg pt-5">Send your recording to the future</div>
@@ -547,7 +569,7 @@ const Recording = () => {
                 >Upload</Button> : null}
                 {isUploading ? <Progress className="mt-10" value={uploadProgress * 100} /> : null}
 
-                {!isUsingFileUpload ? (
+                {isUsingFileUpload ? (
                     <>
                         {isIos ? null : (
                             <p className="text-sm mt-4">Can&apos;t upload a video? <button onClick={function () {
