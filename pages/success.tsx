@@ -1,5 +1,5 @@
 import { Layout } from '@/components/layout'
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { HiCheck } from "react-icons/hi2";
 import { GrFacebookOption } from "react-icons/gr";
 import { FaTwitter } from "react-icons/fa";
@@ -14,10 +14,31 @@ import Link from 'next/link'
 
 
 const Success = () => {
+    const [isShareSupported, setIsShareSupported] = useState(false);
 
     useEffect(() => {
         runFireworks()
     }, [])
+
+
+    // check if Web Share API is supported by the browser
+    useEffect(() => {
+        if (navigator.share) {
+            setIsShareSupported(true);
+        }
+    }, [])
+
+    const handleShareClick = async () => {
+        try {
+            await navigator.share({
+                title: 'Check out this awesome site!',
+                text: 'I just sent a message to my future self using this cool website!',
+                url: window.location.href,
+            });
+        } catch (error) {
+            console.error('Error sharing:', error);
+        }
+    };
 
     return (
         <>
@@ -33,15 +54,15 @@ const Success = () => {
                     </p>
 
                     <div className="mt-10 flex justify-center space-x-5 ">
-                        <Link className=" rounded-full bg-blue-500 " href={''}>
+                        <Link className=" rounded-full bg-blue-500 " href={'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fexample.com%2F'} target="_blank" onClick={handleShareClick}>
                             <GrFacebookOption className='m-3 text-white' size={20} />
                             <span className='sr-only'>Facebook</span>
                         </Link>
-                        <Link className="bg-sky-800 rounded-full" href={''}>
+                        <Link className="bg-sky-800 rounded-full" href={'https://www.linkedin.com/shareArticle?url=https%3A%2F%2Fexample.com%2F&title=Check%20out%20this%20awesome%20site!&summary=I%20just%20sent%20a%20message%20to%20my%20future%20self%20using%20this%20cool%20website!'} target="_blank" onClick={handleShareClick}>
                             <FaLinkedinIn className='m-3 text-white' size={20} />
                             <span className='sr-only'>LinkedIn</span>
                         </Link>
-                        <Link className="rounded-full bg-blue-400" href={''}>
+                        <Link className="rounded-full bg-blue-400" href={'https://twitter.com/intent/tweet?url=https%3A%2F%2Fexample.com%2F&text=Check%20out%20this%20awesome%20site!%20I%20just%20sent%20a%20message%20to%20my%20future%20self%20using%20this%20cool%20website!'} target="_blank" onClick={handleShareClick}>
                             <FaTwitter className='m-3 text-white' size={20} />
                             <span className='sr-only'>Twitter</span>
                         </Link>
