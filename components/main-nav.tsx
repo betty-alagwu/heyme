@@ -26,7 +26,6 @@ export function MainNav({ items }: MainNavProps) {
     <div className="flex gap-6 md:gap-10">
       <Link href="/" className="hidden items-center space-x-2 md:flex">
       <Image src={hello} alt="My GIF" className='w-7 mr-3' />
-        {/* <Icons.logo className="h-6 w-6" /> */}
         <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
         </span>
@@ -58,7 +57,7 @@ export function MainNav({ items }: MainNavProps) {
           >
             {/* <Icons.logo className="mr-2 h-4 w-4" /> */}
             <Image src={hello} alt="My GIF" className='w-7 mr-3' />
-            <span className="font-bold">Hey me</span>
+            <span className="font-bold">hey me</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
