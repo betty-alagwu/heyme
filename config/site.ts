@@ -7,23 +7,21 @@ interface SiteConfig {
   links: {
     twitter: string
     github: string
-    // docs: string
   }
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Hey Me",
+  name: "hey Me",
   description:
-    "Beautifully designed components built with Radix UI and Tailwind CSS.",
+    "This project  allows users to create a video message and schedule it to be sent to their future self at a specified date and time.",
   mainNav: [
     {
-      title: "Home",
+      title: "",
       href: "/",
     },
   ],
   links: {
     twitter: "https://twitter.com/bettyalagwu",
-    github: "https://github.com/betty-alagwu",
-    // docs: "https://ui.shadcn.com",
+    github: "https://github.com/betty-alagwu"
   },
 }
