@@ -15,7 +15,7 @@ export default function IndexPage() {
           <title>Hey Me</title>
           <meta
             name="description"
-            content="The project that allows users to create a video message and schedule it to be
+            content="This project  allows users to create a video message and schedule it to be
            sent to their future self at a specified date and time."
           />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
