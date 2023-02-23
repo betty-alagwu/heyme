@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <>
         <div className="flex justify-center items center">
-           <p>Built with ❤️  <a className='text-slate-500' href='https://twitter.com/bettyalagwu' target="_blank">
+           <p>Built with ❤️  <a className='text-slate-500' href='https://twitter.com/bettyalagwu' target="_blank" rel="noreferrer">
             @bettyalagwu
             </a> </p>
         </div>

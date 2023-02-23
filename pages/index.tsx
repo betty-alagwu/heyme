@@ -43,7 +43,7 @@ export default function IndexPage() {
 
             <Link href={''}>
               <Button className="mt-5 mr-5" type="button">
-                Learn how it's built
+                Learn how it&apos;s built
               </Button>
             </Link>
           </div>
