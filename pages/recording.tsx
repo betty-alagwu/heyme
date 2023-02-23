@@ -24,13 +24,7 @@ const browserInfo = detectBrowser()
 const isIos = browserInfo.os === 'iOS'
 
 const Recording = () => {
-    // 1. access user camera and microphone using getUserMedia()
-    // 2. If user grants access to camera and micrphone, create media recorder
-    // 3. if not access, show a message asking user for permissions
-    // 4. if media recorder is created, register the event listeners for data available and media recording stopped.
-    // 5. when data available, store the chunks
-    // 6. when data stopped, show video player.
-    // 7. when STart button is clicked, start media recorder. 
+
     const mediaRecorder = useRef<MediaRecorder>()
     const mediaChunks = useRef<Blob[]>([])
     const [isRecording, setIsRecording] = useState(false)

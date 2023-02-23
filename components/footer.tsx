@@ -1,10 +1,13 @@
+import Link from 'next/link'
 import React from 'react'
 
 const Footer = () => {
   return (
     <>
-        <div className="border-b border-b-slate-200 bg-white dark:border-b-slate-700 dark:bg-slate-900">
-
+        <div className="flex justify-center items center">
+           <p>Built with ❤️  <a className='text-slate-500' href='https://twitter.com/bettyalagwu' target="_blank">
+            @bettyalagwu
+            </a> </p>
         </div>
     </>
   )
