@@ -1,6 +1,5 @@
 import { Layout } from '@/components/layout'
 import React, { useState, useEffect } from 'react'
-import { HiCheck } from "react-icons/hi2";
 import { GrFacebookOption } from "react-icons/gr";
 import { FaTwitter } from "react-icons/fa";
 import { FaLinkedinIn } from "react-icons/fa";

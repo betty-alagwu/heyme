@@ -12,7 +12,7 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "Future Me",
+  name: "Hey Me",
   description:
     "Beautifully designed components built with Radix UI and Tailwind CSS.",
   mainNav: [
