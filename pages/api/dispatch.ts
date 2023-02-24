@@ -5,6 +5,13 @@ export default async function handleDispatchEmails(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
+  console.log({
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    port: (process.env.MYSQL_PORT as unknown as number) || 3306,
+  })
   // connect to database
   const connection = Mysql.createConnection({
     host: process.env.MYSQL_HOST,
