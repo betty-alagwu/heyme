@@ -77,6 +77,15 @@ const Recording = () => {
                     setUploadProgress(event.progress)
                 }
             })
+
+            // save video to database
+            await Axios.post('/api/store', {
+                email,
+                send_at: deliverIn,
+                send_to: selectedOption === 'Yourself' ? 'yourself' : 'someone_else',
+                video_url: response.data['secure_url']
+            })
+
             setIsRecording(false)
             return response
 
@@ -322,12 +331,6 @@ const Recording = () => {
         setIsUsingFileUpload(true)
         uploadVideoInputRef.current.click()
     }
-
-
-    // on light mode the selected option background should be dark and text should be white
-    // on dark mode the selected option background should be white and text should be dark
-    //  default background should be dark and text should be white on light mode 
-    // dafualt background should be white and text should be dark on dark mode
 
 
 
