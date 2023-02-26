@@ -25,7 +25,7 @@ export function MainNav({ items }: MainNavProps) {
   return (
     <div className="flex gap-6 md:gap-10">
       <Link href="/" className="hidden items-center space-x-2 md:flex">
-      <Image src={hello} alt="My GIF" className='w-7 mr-3' />
+        <Image src={hello} alt="My GIF" className='w-7 mr-3 ' />
         <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
         </span>
@@ -49,38 +49,17 @@ export function MainNav({ items }: MainNavProps) {
           )}
         </nav>
       ) : null}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button
-            variant="ghost"
-            className="-ml-4 text-base hover:bg-transparent focus:ring-0 md:hidden"
-          >
-            {/* <Icons.logo className="mr-2 h-4 w-4" /> */}
-            <Image src={hello} alt="My GIF" className='w-7 mr-3' />
-            <span className="font-bold">hey me</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          align="start"
-          sideOffset={24}
-          className="w-[300px] overflow-scroll"
+      <div className="">
+        <Button
+          variant="ghost"
+          className="-ml-4 text-base hover:bg-transparent focus:ring-0 md:hidden"
         >
-          <DropdownMenuLabel>
-            <Link href="/" className="flex items-center">
-              <Icons.logo className="mr-2 h-4 w-4" /> {siteConfig.name}
-            </Link>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          {items?.map(
-            (item, index) =>
-              item.href && (
-                <DropdownMenuItem key={index} asChild>
-                  <Link href={item.href}>{item.title}</Link>
-                </DropdownMenuItem>
-              )
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <Image src={hello} alt="My GIF" className='lg:w-7 mr-3 w-10' />
+          <Link href={'/'}>
+            <span className="font-bold text-xl md:text-2xl">heyme</span>
+          </Link>
+        </Button>
+      </div>
     </div>
   )
 }

@@ -1,21 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import Mysql from "mysql"
-
-async function insertVideo(connection, data) {
-  return new Promise(function (resolve, reject) {
-    connection.query(
-      `INSERT INTO Videos SET ?`,
-      data,
-      function (error, results, fields) {
-        if (error) {
-          reject(error)
-        } else {
-          resolve({ results, fields })
-        }
-      }
-    )
-  })
-}
+import { createMysqlConnection, insertVideo } from "@/utils/server"
 
 export default async function handleStoreVideo(
   request: NextApiRequest,
@@ -28,13 +12,7 @@ export default async function handleStoreVideo(
   }
 
   // connect to database
-  const connection = Mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    port: (process.env.MYSQL_PORT as unknown as number) || 3306,
-  })
+  const connection = createMysqlConnection()
 
   connection.connect()
 

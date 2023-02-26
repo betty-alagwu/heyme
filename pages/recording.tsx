@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input"
 
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress";
-import Success from "./success"
+import Success from "../components/success"
 import useInterval from "@/lib/useInterval"
 
 
@@ -100,8 +100,8 @@ const Recording = () => {
             setIsUploading(true)
             try {
                 await uploadVideoToCloudinary(uploadedVideo)
+
                 setComplete(true)
-                window.location.href = '/success';
             } catch (error) {
                 console.log(error)
             }
@@ -298,17 +298,10 @@ const Recording = () => {
         setDeliverIn(event.target.value);
     };
 
-    const handleUpload = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        const data = {
-            selectedOption,
-            email,
-            deliverIn,
-        };
-        // send data to server
-        console.log(data)
-    };
-
+    /**
+     * Display the success component if upload is completed.
+     * 
+     */
     if (complete) {
         return (
             <Success />

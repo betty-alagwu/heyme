@@ -4,7 +4,7 @@ import React from 'react'
 const Footer = () => {
   return (
     <>
-        <div className="flex justify-center items center">
+        <div className="flex justify-center items-center pb-16 pt-10">
            <p>Built with ❤️  <a className='text-slate-500' href='https://twitter.com/bettyalagwu' target="_blank" rel="noreferrer">
             @bettyalagwu
             </a> </p>

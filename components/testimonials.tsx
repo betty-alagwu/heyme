@@ -63,7 +63,7 @@ const Testimonials = () => {
     }]
 
     return (
-        <div className=" flex flex-wrap	gap-6 justify-center">
+        <div className="w-full flex flex-wrap gap-6 justify-center">
             {[testimonials.map(testimonial => (
                 <Testimonial testimonial={testimonial} key={testimonial.username} />
             ))]} 

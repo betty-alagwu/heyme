@@ -1,4 +1,5 @@
 import Link from "next/link"
+import NoSSR from 'react-no-ssr'
 import { siteConfig } from "@/config/site"
 
 import { Icons } from "@/components/icons"
@@ -45,7 +46,9 @@ export function SiteHeader() {
                 <span className="sr-only">Twitter</span>
               </div>
             </Link>
-            <ThemeToggle />
+            <NoSSR>
+              <ThemeToggle />
+            </NoSSR>
           </nav>
         </div>
       </div>

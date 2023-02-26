@@ -11,7 +11,7 @@ interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-  name: "hey Me",
+  name: "Heyme",
   description:
     "This project  allows users to create a video message and schedule it to be sent to their future self at a specified date and time.",
   mainNav: [
@@ -22,6 +22,6 @@ export const siteConfig: SiteConfig = {
   ],
   links: {
     twitter: "https://twitter.com/bettyalagwu",
-    github: "https://github.com/betty-alagwu"
+    github: "https://github.com/betty-alagwu",
   },
 }

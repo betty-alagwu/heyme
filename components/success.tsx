@@ -8,10 +8,6 @@ import Image from 'next/image';
 import emailGif from '../public/assets/emailGif.gif'
 import Link from 'next/link'
 
-
-
-
-
 const Success = () => {
     const [isShareSupported, setIsShareSupported] = useState(false);
 
