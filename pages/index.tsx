@@ -30,7 +30,7 @@ export default function IndexPage() {
             Say hello to <br /> the future you.
           </h1>
           <p className="max-w-2xl text-slate-700 dark:text-slate-400 text-base md:text-xl px-0 text-center">
-            <span className="hidden md:inline">Have some goals planned for your future?</span> Send a message to the future, so you watch back and see where you're coming from.
+            <span className="hidden md:inline">Have some goals planned for your future?</span> Send a message to the future, so you watch back and see where you&apos;re coming from.
           </p>
         </div>
       </section>
