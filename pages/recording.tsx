@@ -36,7 +36,7 @@ const Recording = () => {
     const [selectedCamera, setSelectedCamera] = useState<string | null>(null)
     const [selectedMicrophone, setSelectedMicrophone] = useState<string | null>(null)
     const [hasPermissionIssues, setHasPermissionIssues] = useState(false)
-    const [timeElapsed, setTimeElapsed] = useState(5);
+    const [timeElapsed, setTimeElapsed] = useState(300);
     const [uploadVideo, setUploadVideo] = useState<File | null>(null)
     const [videoSrc, setVideoSrc] = useState('')
     const videoRef = useRef<HTMLInputElement>()
@@ -83,7 +83,8 @@ const Recording = () => {
                 email,
                 send_at: deliverIn,
                 send_to: selectedOption === 'Yourself' ? 'yourself' : 'someone_else',
-                video_url: response.data['secure_url']
+                video_url: response.data['secure_url'],
+                created_at: new Date().toLocaleDateString().split('/').reverse().join('-')
             })
 
             setIsRecording(false)

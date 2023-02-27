@@ -22,8 +22,7 @@ export async function fetchAllVideosForToday(connection): Promise<any[]> {
   return new Promise(function (resolve, reject) {
     connection.query(
       "SELECT * FROM `Videos` WHERE `send_at` BETWEEN ? AND ?",
-      //   getTomorrowAndYesterdayDates(),
-      ["2023-02-26", "2023-03-01"],
+      getTomorrowAndYesterdayDates(),
       function (error, results) {
         if (error) {
           reject(error)

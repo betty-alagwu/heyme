@@ -7,7 +7,7 @@ export default async function handleStoreVideo(
 ) {
   const data = request.body
 
-  if (!data.video_url || !data.email || !data.send_at || !data.send_to) {
+  if (!data.video_url || !data.email || !data.send_at || !data.send_to || !data.created_at) {
     return response.status(400).json({ message: "Invalid data provided." })
   }
 

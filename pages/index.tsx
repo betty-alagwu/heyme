@@ -7,8 +7,6 @@ import { Layout } from "@/components/layout"
 import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
 import { DefaultPlayer as Video } from 'react-html5video'
-
-
 import 'react-html5video/dist/styles.css'
 
 export default function IndexPage() {
@@ -72,7 +70,5 @@ export default function IndexPage() {
         <Footer />
       </div>
     </Layout>
-
-
   )
 }

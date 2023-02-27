@@ -6,5 +6,8 @@ CREATE TABLE IF NOT EXISTS Videos (
     send_at DATE NOT NULL,
     sent TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
     video_url VARCHAR(255) NOT NULL,
-    send_to ENUM('yourself', 'someone_else') NOT NULL
+    send_to ENUM('yourself', 'someone_else') NOT NULL,
+    created_at DATE NOT NULL
 );
+
+ALTER TABLE Videos AUTO_INCREMENT = 245673234;

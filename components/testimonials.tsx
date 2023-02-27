@@ -60,13 +60,20 @@ const Testimonials = () => {
         username: '@_DanaCottreau',
         link: 'https://twitter.com/_DanaCottreau/status/1191743079423729664',
         review: 'We just bought this at work and I absolutely love it. You guys did a great job. I do a lot of UI work but did it based on "feel" but couldn\'t explain why... your book does exactly that. Great work!'
+    },
+    {
+            name: 'Frantz Kati',
+            profilePicture: 'https://www.refactoringui.com/_next/static/media/_DanaCottreau.c3099be5f75957319dbbda1a278cefee.jpeg',
+            username: '@bahdcoder',
+            link: 'https://twitter.com/_DanaCottreau/status/1191743079423729664',
+            review: 'We just bought this at work and I absolutely love it. You guys did a great job. I do a lot of UI work but did it based on "feel" but couldn\'t explain why... your book does exactly that. Great work!'
     }]
 
     return (
-        <div className="w-full flex flex-wrap gap-6 justify-center">
+        <div className="w-full flex flex-wrap gap-6 justify-center ">
             {[testimonials.map(testimonial => (
                 <Testimonial testimonial={testimonial} key={testimonial.username} />
-            ))]} 
+            ))]}
         </div>
     )
 
