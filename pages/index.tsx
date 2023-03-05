@@ -1,8 +1,7 @@
 import Head from "next/head"
 import NoSSR from 'react-no-ssr'
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { Layout } from "@/components/layout"
 import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
@@ -20,9 +19,9 @@ export default function IndexPage() {
            sent to their future self at a specified date and time."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.ico"/>
       </Head>
-      <section className=" items-center gap-6 pt-6 pb-2 md:pt-10 justify-center ">
+      <section className="  gap-6 pt-6 pb-2 md:pt-10 ">
         <div className="flex md:max-w-4xl mx-auto flex-col items-center  text-center gap-2">
           <h1 className="text-5xl font-extrabold leading-tight tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl mt-20">
             Say hello to <br /> the future you.
@@ -48,7 +47,7 @@ export default function IndexPage() {
             <button className="w-full mt-5 h-10 py-2 px-4 items-center justify-center rounded-md focus:outline-none
              focus:ring-2 dark:bg-slate-700 dark:hover:bg-slate-800  bg-white hover:bg-slate-200 text-black dark:text-white "
               type="button">
-              Learn how it&apos;s built
+              Learn how it&apos;s built                                                                                                                                                                                                                                                                                                                                                     
             </button>
           </Link>
         </div>
@@ -63,7 +62,7 @@ export default function IndexPage() {
       </section>
 
       <div className="flex flex-col items-center justify-center">
-        <h4 className="font-bold text-2xl md:text-4xl mb-10 md:mb-16 text-center">Kind words from <br />some awesome people</h4>
+        <h2 className="font-bold text-2xl md:text-4xl mb-10 md:mb-16 text-center">Kind words from <br />some awesome people</h2>
         <Testimonials />
       </div>
       <div className="mt-20">

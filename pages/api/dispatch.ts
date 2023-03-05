@@ -81,7 +81,7 @@ export default async function handleDispatchEmails(
     console.log("No videos to send out.")
     return response.json([])
   }
-
+ 
   const url = "api.zeptomail.com/"
   const token = process.env.ZEPTOMAIL_TOKEN
   const client = new SendMailClient({ url, token })
@@ -120,8 +120,6 @@ export default async function handleDispatchEmails(
         outro: "Thank you for using our service.",
       }),
     })
-
-    console.log({ res: res.data })
 
     await updateVideoToSent(connection, video.id)
   }

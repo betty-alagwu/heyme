@@ -5,7 +5,6 @@ import { BsExclamationTriangleFill } from "react-icons/bs";
 import { ImStop } from "react-icons/im";
 
 import { IoIosRadioButtonOn } from "react-icons/io";
-// import { siteConfig } from "@/config/site"
 import { Layout } from "@/components/layout"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input"
@@ -20,7 +19,6 @@ const defaultIntervalTimer = 3000
 const defaultCounterTimer = 4
 
 const browserInfo = detectBrowser()
-
 const isIos = browserInfo.os === 'iOS'
 
 const Recording = () => {
@@ -39,7 +37,6 @@ const Recording = () => {
     const [timeElapsed, setTimeElapsed] = useState(300);
     const [uploadVideo, setUploadVideo] = useState<File | null>(null)
     const [videoSrc, setVideoSrc] = useState('')
-    const videoRef = useRef<HTMLInputElement>()
     const [selectedOption, setSelectedOption] = useState('Yourself')
     const [email, setEmail] = useState('');
     const [error, setError] = useState('');
@@ -47,7 +44,7 @@ const Recording = () => {
     const [uploadProgress, setUploadProgress] = useState(0)
     const [isUploading, setIsUploading] = useState(false)
     const [complete, setComplete] = useState(false)
-    const [browser, setBrowser] = useState<ReturnType<typeof detectBrowser>>(browserInfo);
+    // const [browser, setBrowser] = useState<ReturnType<typeof detectBrowser>>(browserInfo);
     const [isUsingFileUpload, setIsUsingFileUpload] = useState(isIos)
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
@@ -101,7 +98,6 @@ const Recording = () => {
             setIsUploading(true)
             try {
                 await uploadVideoToCloudinary(uploadedVideo)
-
                 setComplete(true)
             } catch (error) {
                 console.log(error)
@@ -112,15 +108,13 @@ const Recording = () => {
 
     async function uploadRecordedVideo() {
         const blob = new Blob(mediaChunks.current)
-
         setIsUploading(true)
 
         try {
             await uploadVideoToCloudinary(blob)
-
             setComplete(true)
         } catch (error) {
-
+            console.log(error)
         }
         setIsUploading(false)
     }
@@ -192,9 +186,8 @@ const Recording = () => {
                     deviceId: cameraDeviceId
                 } : true,
             })
-        } catch (e) {
-            console.error(e.name)
-            if (e.name === 'NotAllowedError') {
+        } catch (error) {
+            if (error.name === 'NotAllowedError') {
                 // handle case where user denied permission.'
                 setHasPermissionIssues(true)
                 return
@@ -240,13 +233,10 @@ const Recording = () => {
     const minutes = Math.floor(timeElapsed / 60)
     const seconds = timeElapsed % 60
 
-    console.log({ isRecording, isStopped })
-
     useInterval(function () {
         setTimeElapsed(currentTimeElapsed => {
             if (currentTimeElapsed === 0) {
                 stopRecording()
-
                 return 0
             }
             return currentTimeElapsed - 1
@@ -438,11 +428,10 @@ const Recording = () => {
                                         ))}
                                     </SelectContent>
                                 </Select>
-
+                                
                                 <div className="text-start font-medium text-sm pt-4 pb-2">
                                     <label htmlFor="Microphone">Microphone</label>
                                 </div>
-
                                 <Select onValueChange={deviceId => setSelectedMicrophone(deviceId)}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder={defaultMicrophone?.label} defaultValue={defaultMicrophone?.deviceId} />
