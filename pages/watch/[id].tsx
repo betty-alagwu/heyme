@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { fetchVideoById } from "@/utils/server";
 import { GetServerSidePropsContext, GetServerSidePropsResult } from "next";
 import { createMysqlConnection } from "@/utils/server";
@@ -5,7 +6,6 @@ import { Layout } from "@/components/layout";
 import { DefaultPlayer as Video } from 'react-html5video'
 import NoSSR from 'react-no-ssr'
 import 'react-html5video/dist/styles.css'
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export interface WatchVideoProps {
@@ -58,19 +58,12 @@ export async function getServerSideProps({ req, res, params }: GetServerSideProp
         }
     }
 
-    const date = new Date(video.created_at)
-    const month = date.toLocaleString('default', { month: 'short' })
-    const day = date.getDate()
-    const year = date.getFullYear()
-    const formattedDate = `${month} ${day}, ${year}`
-
-    console.log({ formattedDate })
     return {
         props: {
             video: {
                 id: video.id,
                 video_url: video.video_url,
-                created_at: formattedDate,
+                created_at: dayjs(video.created_at).format('MMM D, YYYY'),
             }
         }
     }

@@ -44,6 +44,7 @@
     "class-variance-authority": "^0.4.0",
     "clsx": "^1.2.1",
     "cypress": "^12.7.0",
+    "dayjs": "^1.11.7",
     "detect-browser": "^5.3.0",
     "knex": "^2.4.2",
     "lucide-react": "0.105.0-alpha.4",

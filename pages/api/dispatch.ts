@@ -2,6 +2,7 @@ import Fs from "fs"
 import Path from "path"
 import { NextApiRequest, NextApiResponse } from "next"
 import { createMysqlConnection } from "@/utils/server"
+import dayjs from "dayjs"
 import type { Knex } from "knex"
 import { SendMailClient } from "zeptomail"
 
@@ -63,6 +64,8 @@ export default async function handleDispatchEmails(
     }
 
     const isYourself = video.send_to === "yourself"
+
+    video.created_at = dayjs(video.created_at).format("MMM D, YYYY")
 
     await client.sendMail({
       bounce_address: "bounce@mails.heyme.io",
