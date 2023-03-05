@@ -2,6 +2,7 @@ import Fs from "fs"
 import Path from "path"
 import { NextApiRequest, NextApiResponse } from "next"
 import { createMysqlConnection } from "@/utils/server"
+import type { Knex } from "knex"
 import { SendMailClient } from "zeptomail"
 
 function getEmailContent({ watchLink, greeting, body, outro }) {
@@ -17,51 +18,21 @@ function getEmailContent({ watchLink, greeting, body, outro }) {
   return emailContent
 }
 
-function getTomorrowAndYesterdayDates() {
+function getFormattedDateToday() {
   let now = new Date()
-  let tomorrow = new Date(now)
 
-  let yesterday = new Date(now)
-
-  yesterday.setDate(yesterday.getDate() - 1)
-
-  tomorrow.setDate(tomorrow.getDate() + 1)
-
-  return [
-    yesterday.toLocaleDateString().split("/").reverse().join("-"),
-    tomorrow.toLocaleDateString().split("/").reverse().join("-"),
-  ]
+  return now.toLocaleDateString().split("/").reverse().join("-")
 }
 
-export async function fetchAllVideosForToday(connection): Promise<any[]> {
-  return new Promise(function (resolve, reject) {
-    connection.query(
-      "SELECT * FROM `Videos` WHERE `send_at` BETWEEN ? AND ?",
-      getTomorrowAndYesterdayDates(),
-      function (error, results) {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(results)
-        }
-      }
-    )
-  })
+export async function fetchAllVideosForToday(connection: Knex): Promise<any[]> {
+  return connection("Videos")
+    .select("*")
+    .where({ send_at: getFormattedDateToday() })
 }
 
-export async function updateVideoToSent(connection, id) {
-  return new Promise(function (resolve, reject) {
-    connection.query(
-      `UPDATE Videos SET sent = ? WHERE id = ?`,
-      [1, id],
-      function (error, result) {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(result)
-        }
-      }
-    )
+export async function updateVideoToSent(connection: Knex, id: number) {
+  await connection("Videos").where({ id }).update({
+    sent: 1,
   })
 }
 
@@ -70,18 +41,16 @@ export default async function handleDispatchEmails(
   response: NextApiResponse
 ) {
   // connect to database
-  const connection = createMysqlConnection()
-
-  connection.connect()
+  const knex = createMysqlConnection()
 
   // fetch all videos from database where date is today.
-  const videos = await fetchAllVideosForToday(connection)
+  const videos = await fetchAllVideosForToday(knex)
 
   if (videos.length === 0) {
     console.log("No videos to send out.")
     return response.json([])
   }
- 
+
   const url = "api.zeptomail.com/"
   const token = process.env.ZEPTOMAIL_TOKEN
   const client = new SendMailClient({ url, token })
@@ -95,7 +64,7 @@ export default async function handleDispatchEmails(
 
     const isYourself = video.send_to === "yourself"
 
-    const res = await client.sendMail({
+    await client.sendMail({
       bounce_address: "bounce@mails.heyme.io",
       from: {
         address: "betty@heyme.io",
@@ -121,9 +90,9 @@ export default async function handleDispatchEmails(
       }),
     })
 
-    await updateVideoToSent(connection, video.id)
+    await updateVideoToSent(knex, video.id)
   }
 
-  connection.end()
+  await knex.destroy()
   return response.json([])
 }

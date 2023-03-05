@@ -1,19 +1,7 @@
-import Mysql from "mysql"
+import Knex, { Knex as KnexConnection } from "knex"
 
-export async function insertVideo(connection, data) {
-  return new Promise(function (resolve, reject) {
-    connection.query(
-      `INSERT INTO Videos SET ?`,
-      data,
-      function (error, results, fields) {
-        if (error) {
-          reject(error)
-        } else {
-          resolve({ results, fields })
-        }
-      }
-    )
-  })
+export function insertVideo(connection: KnexConnection, data) {
+  return connection("Videos").insert(data)
 }
 
 /**
@@ -26,20 +14,10 @@ export async function insertVideo(connection, data) {
  * @param id id of video we want to find. Usually coming from dynamic page route params
  * @returns Promise with video row or undefined.
  */
-export function fetchVideoById(connection, id) {
-  return new Promise(function (resolve, reject) {
-    connection.query(
-      `SELECT * FROM Videos WHERE id = ?`,
-      id,
-      function (error, results, fields) {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(results[0])
-        }
-      }
-    )
-  })
+export async function fetchVideoById(connection: KnexConnection, id) {
+  const results = await connection("Videos").select("*").where({ id })
+
+  return results[0]
 }
 
 /**
@@ -48,11 +26,14 @@ export function fetchVideoById(connection, id) {
  * @returns Mysql connection instance.
  */
 export function createMysqlConnection() {
-  return Mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    port: (process.env.MYSQL_PORT as unknown as number) || 3306,
+  return Knex({
+    client: "mysql",
+    connection: {
+      host: process.env.MYSQL_HOST,
+      port: (process.env.MYSQL_PORT as unknown as number) || 3306,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
+    },
   })
 }

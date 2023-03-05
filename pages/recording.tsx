@@ -68,29 +68,23 @@ const Recording = () => {
         form.append('file', file)
         form.append('cloud_name', 'dq5e0bbl8')
 
-        try {
-            const response = await Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload', form, {
-                onUploadProgress(event) {
-                    setUploadProgress(event.progress)
-                }
-            })
+        const response = await Axios.post('https://api.cloudinary.com/v1_1/dq5e0bbl8/upload', form, {
+            onUploadProgress(event) {
+                setUploadProgress(event.progress)
+            }
+        })
 
-            // save video to database
-            await Axios.post('/api/store', {
-                email,
-                send_at: deliverIn,
-                send_to: selectedOption === 'Yourself' ? 'yourself' : 'someone_else',
-                video_url: response.data['secure_url'],
-                created_at: new Date().toLocaleDateString().split('/').reverse().join('-')
-            })
+        // save video to database
+        await Axios.post('/api/store', {
+            email,
+            send_at: deliverIn,
+            send_to: selectedOption === 'Yourself' ? 'yourself' : 'someone_else',
+            video_url: response.data['secure_url'],
+            created_at: new Date().toLocaleDateString().split('/').reverse().join('-')
+        })
 
-            setIsRecording(false)
-            return response
-
-        } catch (error) {
-            setUploadProgress(0)
-            setUploadToCloudinaryError('Video failed to upload, please try again!')
-        }
+        setIsRecording(false)
+        return response
     }
 
     async function uploadUploadedVideo() {
@@ -100,7 +94,8 @@ const Recording = () => {
                 await uploadVideoToCloudinary(uploadedVideo)
                 setComplete(true)
             } catch (error) {
-                console.log(error)
+                setUploadProgress(0)
+                setUploadToCloudinaryError('Video failed to upload, please try again!')
             }
         }
         return setIsUploading(false)
@@ -114,7 +109,8 @@ const Recording = () => {
             await uploadVideoToCloudinary(blob)
             setComplete(true)
         } catch (error) {
-            console.log(error)
+            setUploadProgress(0)
+            setUploadToCloudinaryError('Video failed to upload, please try again!')
         }
         setIsUploading(false)
     }
@@ -428,7 +424,7 @@ const Recording = () => {
                                         ))}
                                     </SelectContent>
                                 </Select>
-                                
+
                                 <div className="text-start font-medium text-sm pt-4 pb-2">
                                     <label htmlFor="Microphone">Microphone</label>
                                 </div>
@@ -459,17 +455,11 @@ const Recording = () => {
                 ) : null}
                 {(isStopped || isUsingFileUpload) ? (
                     <>
-                        {uploadError ? (
+                        {uploadError || uploadToCloudinaryError ? (
                             <>
-                                <div className="text-red-500 pt-5 text-sm">
-                                    {uploadError}
+                                <div className="text-red-500 pt-5 text-sm font-semibold">
+                                    {uploadError || uploadToCloudinaryError}
                                 </div>
-                                <>
-                                    {uploadToCloudinaryError ? (
-                                        <div className="text-red-500 pt-5 text-sm
-                                    "> {uploadToCloudinaryError} </div>
-                                    ) : null}
-                                </>
                             </>
 
                         ) : (
