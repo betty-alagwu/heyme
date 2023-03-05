@@ -24,7 +24,7 @@ export default function WatchVideo({ video }: WatchVideoProps) {
             <div className="flex flex-col items-center justify-center mt-8 ">
                 <NoSSR>
                     <Video controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']} className=' aspect-video'>
-                        <source src={video.video_url} type="video/mkv" className="" />
+                        <source src={video.video_url} />
                     </Video>
                 </NoSSR>
                 <Link href={"/recording"} className=" sm:max-w-[200px] sm:mr-4 mt-4">
