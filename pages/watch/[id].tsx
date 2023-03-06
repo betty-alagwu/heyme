@@ -7,6 +7,7 @@ import { DefaultPlayer as Video } from 'react-html5video'
 import NoSSR from 'react-no-ssr'
 import 'react-html5video/dist/styles.css'
 import Link from "next/link";
+import { detect as detectBrowser } from 'detect-browser';
 
 export interface WatchVideoProps {
     video: {
@@ -17,12 +18,19 @@ export interface WatchVideoProps {
     }
 }
 
+const browser = detectBrowser()
+
+const isIos = browser.os === 'iOS'
+
 export default function WatchVideo({ video }: WatchVideoProps) {
+    const isMkv = video.video_url.endsWith('mkv')
+
     return (
         <Layout>
             <h2 className="text-center mt-10 font-bold text-xl md:text-2xl">{`A message from ${video.created_at}`}</h2>
             <div className="flex flex-col items-center justify-center mt-8 ">
                 <NoSSR>
+                    {isIos && isMkv ? <p className='text-sm text-red-500 text-center mb-4'>If you video cannot play, please try viewing it from a computer or another non IOS device.</p> : null}
                     <Video controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']} className=' aspect-video'>
                         <source src={video.video_url} />
                     </Video>

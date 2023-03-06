@@ -19,7 +19,7 @@ export default function IndexPage() {
            sent to their future self at a specified date and time."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico"/>
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <section className="  gap-6 pt-6 pb-2 md:pt-10 ">
         <div className="flex md:max-w-4xl mx-auto flex-col items-center  text-center gap-2">
@@ -47,7 +47,7 @@ export default function IndexPage() {
             <button className="w-full mt-5 h-10 py-2 px-4 items-center justify-center rounded-md focus:outline-none
              focus:ring-2 dark:bg-slate-700 dark:hover:bg-slate-800  bg-white hover:bg-slate-200 text-black dark:text-white "
               type="button">
-              Learn how it&apos;s built                                                                                                                                                                                                                                                                                                                                                     
+              Learn how it&apos;s built
             </button>
           </Link>
         </div>
