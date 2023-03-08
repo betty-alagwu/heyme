@@ -22,6 +22,6 @@ export const siteConfig: SiteConfig = {
   ],
   links: {
     twitter: "https://twitter.com/bettyalagwu",
-    github: "https://github.com/betty-alagwu",
+    github: "https://github.com/betty-alagwu/heyme",
   },
 }
