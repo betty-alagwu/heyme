@@ -11,6 +11,7 @@ Whether aspiring towards personal or professional goals, this project allows ind
 </br>
 </br>
 By engaging in this introspective exercise, individuals can cultivate a deeper understanding of their values, priorities, and aspirations, ultimately leading to enhanced self-awareness and personal growth.
+
 ![screenshot](https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678282734/Screenshot_2023-03-08_at_14.38.05_srmw0p.png)
 
 ## Feature list
