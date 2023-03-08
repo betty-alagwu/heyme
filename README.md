@@ -4,11 +4,14 @@
 <hr />
 </div>
 
- [Heyme](https://heyme.io)  offers a unique opportunity for individuals to connect with their future selves by sending messages that serve as a powerful source of motivation and a poignant reminder of their journey.
- </br>
- Whether aspiring towards personal or professional goals, this project allows individuals to envision their desired future and set a tangible reminder of their progress thus far. 
- By engaging in this introspective exercise, individuals can cultivate a deeper understanding of their values, priorities, and aspirations, ultimately leading to enhanced self-awareness and personal growth.
- ![screenshot](https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678282734/Screenshot_2023-03-08_at_14.38.05_srmw0p.png)
+[Heyme](https://heyme.io) offers a unique opportunity for individuals to connect with their future selves by sending messages that serve as a powerful source of motivation and a poignant reminder of their journey.
+</br>
+</br>
+Whether aspiring towards personal or professional goals, this project allows individuals to envision their desired future and set a tangible reminder of their progress thus far.
+</br>
+</br>
+By engaging in this introspective exercise, individuals can cultivate a deeper understanding of their values, priorities, and aspirations, ultimately leading to enhanced self-awareness and personal growth.
+![screenshot](https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678282734/Screenshot_2023-03-08_at_14.38.05_srmw0p.png)
 
 ## Feature list
 
@@ -20,9 +23,9 @@
 
 ## Supported database
 
-| Database    | Status | |
-|:------------|:-------:|:---|
-| MySQL  | ✅ | [Docs](https://www.mysql.com/)|
+| Database | Status |                                |
+| :------- | :----: | :----------------------------- |
+| MySQL    |   ✅   | [Docs](https://www.mysql.com/) |
 
 ## Installation
 
@@ -31,10 +34,9 @@
 git clone https://github.com/betty-alagwu/heyme
 
 
-# Install yarn 
+# Install yarn
 yarn
 
 # Runs on localhost:3000 by default
 yarn dev
 ```
-
