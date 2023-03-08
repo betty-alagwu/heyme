@@ -1,78 +1,42 @@
-# next-template
+<div align="center">
+<h1>Heyme <a href=""><img alt="heyme" src="https://heyme.io"></a></h1>
+<h6><i>Send messages to your future self</i></h6>
+<hr />
+</div>
 
-A Next.js 13 template for building apps with Radix UI and Tailwind CSS.
+ [Heyme](https://heyme.io)  offers a unique opportunity for individuals to connect with their future selves by sending messages that serve as a powerful source of motivation and a poignant reminder of their journey. Whether aspiring towards personal or professional goals, this project allows individuals to envision their desired future and set a tangible reminder of their progress thus far. By engaging in this introspective exercise, individuals can cultivate a deeper understanding of their values, priorities, and aspirations, ultimately leading to enhanced self-awareness and personal growth.
 
-## Features
+ ![screenshot](https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678282734/Screenshot_2023-03-08_at_14.38.05_srmw0p.png)
 
-- Radix UI Primitives
-- Tailwind CSS
-- Fonts with `@next/font`
-- Icons from [Lucide](https://lucide.dev)
+## Feature list
+
 - Dark mode with `next-themes`
-- Automatic import sorting with `@ianvs/prettier-plugin-sort-imports`
+- Message scheduling: This project could allow users to schedule messages to be delivered to their future selves at a specific time and date,
+- Customization options: Users could have the ability to customize their messages by sending to themselves directly or to someone else
+- Time capsules: This project could offer the option to create time capsules, which allow users to send messages to their future selves to be delivered at a specific point in the future, such as 5, 10, or 20 years from now.
+- Social sharing: This project could be shared with other platforms, such as social media or productivity apps, to help users stay connected to their goals and motivations.
 
-## Tailwind CSS Features
+## Supported database
 
-- Class merging with `taiwind-merge`
-- Animation with `tailwindcss-animate`
-- Conditional classes with `clsx`
-- Variants with `class-variance-authority`
-- Automatic class sorting with `eslint-plugin-tailwindcss`
+| Database    | Status | |
+|:------------|:-------:|:---|
+| MySQL  | ✅ | [Docs](https://www.mysql.com/)|
 
-## Import Sort
+## Installation
 
-The starter comes with `@ianvs/prettier-plugin-sort-imports` for automatically sort your imports.
+```bash
+# Clone the repo
+git clone https://github.com/mozilla/perfcompare.git
 
-### Input
 
-```tsx
-import * as React from "react"
-import Link from "next/link"
+# Install yarn 
+yarn
 
-import { siteConfig } from "@/config/site"
-import { buttonVariants } from "@/components/ui/button"
-import "@/styles/globals.css"
-import { twMerge } from "tailwind-merge"
-
-import { NavItem } from "@/types/nav"
-import { cn } from "@/lib/utils"
+# Runs on localhost:3000 by default
+yarn dev
 ```
 
-### Output
 
-```tsx
-import * as React from "react"
-// React is always first.
-import Link from "next/link"
-// Followed by next modules.
-import { twMerge } from "tailwind-merge"
+<!-- ## License -->
 
-// Followed by third-party modules
-// Space
-import "@/styles/globals.css"
-// styles
-import { NavItem } from "@/types/nav"
-// types
-import { siteConfig } from "@/config/site"
-// config
-import { cn } from "@/lib/utils"
-// lib
-import { buttonVariants } from "@/components/ui/button"
-
-// components
-```
-
-### Class Merging
-
-The `cn` util handles conditional classes and class merging.
-
-### Input
-
-```ts
-cn("px-2 bg-slate-100 py-2 bg-slate-200")
-// Outputs `p-2 bg-slate-200`
-```
-
-## License
-
-Licensed under the [MIT license](https://github.com/shadcn/ui/blob/main/LICENSE.md).
+<!-- Licensed under the [MIT license](https://github.com/shadcn/ui/blob/main/LICENSE.md). -->
