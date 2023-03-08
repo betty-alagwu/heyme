@@ -1,6 +1,6 @@
 <div align="center">
 <h1>Heyme</h1>
-<h2><i>Send messages to your future self</i></h2>
+<h6><i>Send messages to your future self</i></h6>
 <hr />
 </div>
 
