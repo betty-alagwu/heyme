@@ -1,5 +1,5 @@
 <div align="center">
-<h1>Heyme <a href="https://heyme.io"></a></h1>
+<h1>Heyme</h1>
 <h2><i>Send messages to your future self</i></h2>
 <hr />
 </div>
