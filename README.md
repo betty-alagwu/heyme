@@ -1,6 +1,6 @@
 <div align="center">
-<h1>Heyme <a href=""><img alt="heyme" src="https://heyme.io"></a></h1>
-<h6><i>Send messages to your future self</i></h6>
+<h1>Heyme <a href="https://heyme.io"></a></h1>
+<h2><i>Send messages to your future self</i></h2>
 <hr />
 </div>
 
