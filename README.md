@@ -22,47 +22,31 @@ By engaging in this introspective exercise, individuals can cultivate a deeper u
 - Time capsules: This project could offer the option to create time capsules, which allow users to send messages to their future selves to be delivered at a specific point in the future, such as 5, 10, or 20 years from now.
 - Social sharing: This project could be shared with other platforms, such as social media or productivity apps, to help users stay connected to their goals and motivations.
 
-## Installation
-
-### General setup
+## General setup
 
 1. Prerequisites
-On all platforms:
-- Install Node version 16.4.0
-- Install [yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
+   On all platforms:
 
+   - Install Node version 16.4.0
+   - Install [yarn](https://classic.yarnpkg.com/lang/en/docs/install)
 
 2. Clone the repo
-```
-git clone <your fork>
-```
 
+   ```
+   git clone <your fork>
+   ```
 
- 3. Set up MySql database
-you can use Railwayapp
+3. Set up environment variables
 
+   ```
+   cp .env.example .env.local
+   ```
 
+   Update env variables with your environment viariables
 
-4. Set up the Zeptomail api token
-To send emails
+4. Run the development server:
 
-
-
-5.  Set up cloudinary api 
-To upload videos
-
-
-
-6. Set up environment variables
-```
-cp .env.example .env.local
-```
-Update env variables with your environment viariables
-
-
-7. Runs on localhost:3000 by default
-```
-yarn dev
-```
-
+   ```
+   yarn dev
+   ```
