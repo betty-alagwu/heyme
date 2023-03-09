@@ -35,7 +35,20 @@ By engaging in this introspective exercise, individuals can cultivate a deeper u
 git clone https://github.com/betty-alagwu/heyme
 
 
-# Install yarn
+# Set up MySql database
+you can use Railwayapp
+
+# Set up the Zeptomail api token
+To send emails
+
+#  Set up cloudinary api 
+To upload videos
+
+# Set up environment variables
+cp .env.example .env.local
+Update env variables with your environment viariables
+
+# Install dependencies
 yarn
 
 # Runs on localhost:3000 by default
