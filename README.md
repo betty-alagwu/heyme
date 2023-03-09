@@ -24,7 +24,7 @@ By engaging in this introspective exercise, individuals can cultivate a deeper u
 
 ## Installation
 
-# General setup
+### General setup
 
 1. Prerequisites
 On all platforms:
@@ -34,9 +34,7 @@ On all platforms:
 
 
 2. Clone the repo
-```
-git clone https://github.com/betty-alagwu/heyme
-```
+     git clone <your fork>
 
 
  3. Set up MySql database
