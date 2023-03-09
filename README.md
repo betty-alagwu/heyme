@@ -25,7 +25,7 @@ By engaging in this introspective exercise, individuals can cultivate a deeper u
 ## Installation
 
 ### General setup
-
+```
 1. Prerequisites
 On all platforms:
 - Install Node version 16.4.0
@@ -34,7 +34,9 @@ On all platforms:
 
 
 2. Clone the repo
-     git clone <your fork>
+```
+git clone <your fork>
+```
 
 
  3. Set up MySql database
@@ -57,4 +59,4 @@ Update env variables with your environment viariables
 ```
 yarn dev
 ```
-
+```
