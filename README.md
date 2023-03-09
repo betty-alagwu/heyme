@@ -25,7 +25,7 @@ By engaging in this introspective exercise, individuals can cultivate a deeper u
 ## Installation
 
 ### General setup
-```
+
 1. Prerequisites
 On all platforms:
 - Install Node version 16.4.0
@@ -42,11 +42,17 @@ git clone <your fork>
  3. Set up MySql database
 you can use Railwayapp
 
+
+
 4. Set up the Zeptomail api token
 To send emails
 
+
+
 5.  Set up cloudinary api 
 To upload videos
+
+
 
 6. Set up environment variables
 ```
@@ -59,4 +65,4 @@ Update env variables with your environment viariables
 ```
 yarn dev
 ```
-```
+
