@@ -7,22 +7,32 @@ import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
 import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
+import { NextSeo } from 'next-seo'
 
-
-
+const seoOptions = {
+  url: 'https://heyme.io',
+  name: 'Heyme',
+  image: 'https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678431588/websites-production/heyme-social-preview-card.png',
+}
 export default function IndexPage() {
   return (
     <Layout>
-      <Head>
-        <title>heyme</title>
-        <meta
-          name="description"
-          content="This project  allows users to create a video message and schedule it to be
-           sent to their future self at a specified date and time."
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <NextSeo
+        title='Heyme - Say hello to the future you.'
+        description="This project  allows users to create a video message and schedule it to be
+          sent to their future self at a specified date and time."
+        openGraph={{
+          images: [{
+            url: seoOptions.image
+          }],
+          siteName: seoOptions.name
+        }}
+        twitter={{
+          cardType: 'summary_large_image',
+          site: seoOptions.url,
+          handle: '@bettyalagwu'
+        }}
+      />
       <section className="  gap-6 pt-6 pb-2 md:pt-10 ">
         <div className="flex md:max-w-4xl mx-auto flex-col items-center  text-center gap-2">
           <h1 className="text-5xl font-extrabold leading-tight tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl mt-20">
@@ -57,7 +67,7 @@ export default function IndexPage() {
         <div className="flex flex-col items-center text-center flex-wrap	gap-6 justify-center my-10 md:my-16">
           <NoSSR>
             <div className="flex justify-center mx-auto max-w-3xl">
-              <Video className='aspect-video' controls>
+              <Video className='aspect-video' controls poster='https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678427734/Screenshot_2023-03-10_at_06.55.02_qlj7ao.png'>
                 <source src="https://res.cloudinary.com/dq5e0bbl8/video/upload/v1678405402/Betty-recording-heyme-2_livaaw.mp4" type="video/mp4" />
               </Video>
             </div>
