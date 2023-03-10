@@ -67,7 +67,7 @@ export default function IndexPage() {
         <div className="flex flex-col items-center text-center flex-wrap	gap-6 justify-center my-10 md:my-16">
           <NoSSR>
             <div className="flex justify-center mx-auto max-w-3xl">
-              <Video className='aspect-video' controls poster='https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678434128/websites-production/cover-poster_o9vczf.png'>
+              <Video className='aspect-video' controls poster='https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678434442/websites-production/cover-poster_j7ahzb.webp'>
                 <source src="https://res.cloudinary.com/dq5e0bbl8/video/upload/v1678405402/Betty-recording-heyme-2_livaaw.mp4" type="video/mp4" />
               </Video>
             </div>
