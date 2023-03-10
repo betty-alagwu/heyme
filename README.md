@@ -50,3 +50,16 @@ By engaging in this introspective exercise, individuals can cultivate a deeper u
    ```
    yarn dev
    ```
+
+## Architecture
+
+The application uses a number of services:
+
+1. MySQL for data storage
+2. Zeptomail for transactional emails
+3. Web media API
+4. Web Media Recorder API
+
+Here's an overview of the application architecture:
+
+![heyme architecture diagram](https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678432640/websites-production/heyme-diagram_zn06de.png)
