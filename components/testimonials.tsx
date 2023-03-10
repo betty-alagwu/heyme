@@ -54,19 +54,6 @@ const Testimonials = () => {
         username: '@wannyjazzy',
         link: 'https://twitter.com/wannyjazzy/status/1628768118494437377',
         review: 'I’ve had the privilege of trying out @bettyalagwu #HeyMe website. Not only is the website epigrammatic, it is also a timeless video time capsule that could be used as a self motivational and encouragement tool or by a group.'
-    }, {
-        name: 'Dana Cottreau',
-        profilePicture: 'https://www.refactoringui.com/_next/static/media/_DanaCottreau.c3099be5f75957319dbbda1a278cefee.jpeg',
-        username: '@_DanaCottreau',
-        link: 'https://twitter.com/_DanaCottreau/status/1191743079423729664',
-        review: 'We just bought this at work and I absolutely love it. You guys did a great job. I do a lot of UI work but did it based on "feel" but couldn\'t explain why... your book does exactly that. Great work!'
-    },
-    {
-            name: 'Frantz Kati',
-            profilePicture: 'https://www.refactoringui.com/_next/static/media/_DanaCottreau.c3099be5f75957319dbbda1a278cefee.jpeg',
-            username: '@bahdcoder',
-            link: 'https://twitter.com/_DanaCottreau/status/1191743079423729664',
-            review: 'We just bought this at work and I absolutely love it. You guys did a great job. I do a lot of UI work but did it based on "feel" but couldn\'t explain why... your book does exactly that. Great work!'
     }]
 
     return (
