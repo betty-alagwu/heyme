@@ -45,7 +45,7 @@ export default function IndexPage() {
             </button>
           </Link>
 
-          <a href={'https://github.com/betty-alagwu/heyme'} target='_blank' className="w-full sm:max-w-[200px] ">
+          <a rel="noreferrer" href={'https://github.com/betty-alagwu/heyme'} target='_blank' className="w-full sm:max-w-[200px] ">
             <button className="w-full mt-5 h-10 py-2 px-4 items-center justify-center rounded-md focus:outline-none
              focus:ring-2 dark:bg-slate-700 dark:hover:bg-slate-800  bg-white hover:bg-slate-200 text-black dark:text-white "
               type="button">
