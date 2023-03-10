@@ -54,6 +54,12 @@ const Testimonials = () => {
         username: '@wannyjazzy',
         link: 'https://twitter.com/wannyjazzy/status/1628768118494437377',
         review: 'I’ve had the privilege of trying out @bettyalagwu #HeyMe website. Not only is the website epigrammatic, it is also a timeless video time capsule that could be used as a self motivational and encouragement tool or by a group.'
+    }, {
+        review: 'I just sent a message to my future self, telling him my goals and ambitions for the next 10 months,  and where I\'m currently at, somehow I\'m excited about it. hopefully, I get to achieve em before then😄. Also, Finna share the site with my buddies',
+        username: 'thissdax',
+        profilePicture: 'https://pbs.twimg.com/profile_images/1601189473521475584/_gAjomj5_400x400.jpg',
+        link: 'https://twitter.com/thissdax/status/1634159706812866560',
+        name: '~DAX~'
     }]
 
     return (
