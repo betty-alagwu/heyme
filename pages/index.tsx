@@ -8,6 +8,8 @@ import Footer from "@/components/footer"
 import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
 
+
+
 export default function IndexPage() {
   return (
     <Layout>
@@ -43,20 +45,22 @@ export default function IndexPage() {
             </button>
           </Link>
 
-          <Link href={''} className="w-full sm:max-w-[200px] ">
+          <a href={'https://github.com/betty-alagwu/heyme'} target='_blank' className="w-full sm:max-w-[200px] ">
             <button className="w-full mt-5 h-10 py-2 px-4 items-center justify-center rounded-md focus:outline-none
              focus:ring-2 dark:bg-slate-700 dark:hover:bg-slate-800  bg-white hover:bg-slate-200 text-black dark:text-white "
               type="button">
               Learn how it&apos;s built
             </button>
-          </Link>
+          </a>
         </div>
 
         <div className="flex flex-col items-center text-center flex-wrap	gap-6 justify-center my-10 md:my-16">
           <NoSSR>
-            <Video controls={['PlayPause', 'Seek', 'Time', 'Volume', 'Fullscreen']}>
-              <source src="https://res.cloudinary.com/dq5e0bbl8/video/upload/v1677442397/future-me/s3azly4ptqiavdchyfoo.mp4" type="video/mp4" />
-            </Video>
+            <div className="flex justify-center mx-auto max-w-3xl">
+              <Video className='aspect-video' controls>
+                <source src="https://res.cloudinary.com/dq5e0bbl8/video/upload/v1678405402/Betty-recording-heyme-2_livaaw.mp4" type="video/mp4" />
+              </Video>
+            </div>
           </NoSSR>
         </div>
       </section>
