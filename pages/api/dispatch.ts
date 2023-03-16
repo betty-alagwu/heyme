@@ -19,16 +19,10 @@ function getEmailContent({ watchLink, greeting, body, outro }) {
   return emailContent
 }
 
-function getFormattedDateToday() {
-  let now = new Date()
-
-  return now.toLocaleDateString().split("/").reverse().join("-")
-}
-
 export async function fetchAllVideosForToday(connection: Knex): Promise<any[]> {
   return connection("Videos")
     .select("*")
-    .where({ send_at: getFormattedDateToday() })
+    .where({ send_at: dayjs().format('YYYY-MM-DD') })
 }
 
 export async function updateVideoToSent(connection: Knex, id: number) {
