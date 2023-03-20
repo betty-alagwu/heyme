@@ -3,7 +3,6 @@ import { Inter as FontSans } from "@next/font/google"
 import { ThemeProvider } from "next-themes"
 import { Analytics } from '@vercel/analytics/react'
 import { H } from 'highlight.run'
-import { ErrorBoundary } from '@highlight-run/react'
 import "@/styles/globals.css"
 import Head from "next/head"
 
