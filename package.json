@@ -10,6 +10,7 @@
     "preview": "next build && next start"
   },
   "dependencies": {
+    "@highlight-run/next": "^2.2.2",
     "@next/font": "^13.1.6",
     "@radix-ui/react-accessible-icon": "^1.0.1",
     "@radix-ui/react-accordion": "^1.1.0",

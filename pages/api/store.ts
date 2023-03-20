@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import { createMysqlConnection, insertVideo } from "@/utils/server"
+import { withHighlight } from '../../highlight.config'
 
-export default async function handleStoreVideo(
+
+ async function handleStoreVideo(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
@@ -26,3 +28,4 @@ export default async function handleStoreVideo(
 
   response.json(result)
 }
+export default withHighlight(handleStoreVideo)

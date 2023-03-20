@@ -5,6 +5,7 @@ import { createMysqlConnection } from "@/utils/server"
 import dayjs from "dayjs"
 import type { Knex } from "knex"
 import { SendMailClient } from "zeptomail"
+import { withHighlight } from '../../highlight.config'
 
 function getEmailContent({ watchLink, greeting, body, outro }) {
   let emailContent = Fs.readFileSync(
@@ -31,7 +32,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
   })
 }
 
-export default async function handleDispatchEmails(
+ async function handleDispatchEmails(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
@@ -93,3 +94,4 @@ export default async function handleDispatchEmails(
   await knex.destroy()
   return response.json([])
 }
+export default withHighlight(handleDispatchEmails)

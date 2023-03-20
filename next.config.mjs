@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+import { withHighlightConfig } from '@highlight-run/next'
+
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
@@ -14,4 +16,4 @@ const nextConfig = {
   },
 }
 
-export default nextConfig
+export default withHighlightConfig(nextConfig)

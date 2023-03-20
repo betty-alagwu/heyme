@@ -2,7 +2,8 @@ import type { AppProps } from "next/app"
 import { Inter as FontSans } from "@next/font/google"
 import { ThemeProvider } from "next-themes"
 import { Analytics } from '@vercel/analytics/react'
-
+import { H } from 'highlight.run'
+import { ErrorBoundary } from '@highlight-run/react'
 import "@/styles/globals.css"
 import Head from "next/head"
 
@@ -11,6 +12,8 @@ const fontSans = FontSans({
   variable: "--font-sans",
   display: 'swap',
 })
+
+H.init('4d7zk0eo')
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
