@@ -44,7 +44,6 @@ const Recording = () => {
     const [uploadProgress, setUploadProgress] = useState(0)
     const [isUploading, setIsUploading] = useState(false)
     const [complete, setComplete] = useState(false)
-    // const [browser, setBrowser] = useState<ReturnType<typeof detectBrowser>>(browserInfo);
     const [isUsingFileUpload, setIsUsingFileUpload] = useState(isIos)
     const uploadVideoInputRef = useRef() as MutableRefObject<HTMLInputElement>
     const [uploadedVideo, setUploadedVideo] = useState<File | null>(null);
@@ -110,7 +109,6 @@ const Recording = () => {
             setComplete(true)
         } catch (error) {
             setUploadProgress(0)
-            console.log('error occured', error)
             setUploadToCloudinaryError('Video failed to upload, please try again!')
         }
         setIsUploading(false)
@@ -171,7 +169,7 @@ const Recording = () => {
         setDevices(enumeratedDevices)
     }
 
-    async function accessUserDevices(cameraDeviceId?: string, microphoneDeviceId?: string) {
+     const  accessUserDevices = async (cameraDeviceId?: string, microphoneDeviceId?: string) => {
         let mediaStream: MediaStream
 
         try {

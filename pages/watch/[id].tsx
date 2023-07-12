@@ -48,7 +48,7 @@ export default function WatchVideo({ video }: WatchVideoProps) {
     )
 }
 
-export async function getServerSideProps({ req, res, params }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<{
+export async function getServerSideProps({ params }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<{
     video: {
         id: number
         video_url: string

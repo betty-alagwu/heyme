@@ -3,7 +3,7 @@ import { createMysqlConnection, insertVideo } from "@/utils/server"
 import { withHighlight } from '../../highlight.config'
 
 
- async function handleStoreVideo(
+export async function handleStoreVideo(
   request: NextApiRequest,
   response: NextApiResponse
 ) {

@@ -7,7 +7,7 @@ import type { Knex } from "knex"
 import { SendMailClient } from "zeptomail"
 import { withHighlight } from '../../highlight.config'
 
-function getEmailContent({ watchLink, greeting, body, outro }) {
+export async function getEmailContent({ watchLink, greeting, body, outro }) {
   let emailContent = Fs.readFileSync(
     Path.resolve("public", "mails", "email.html")
   ).toString()
@@ -43,7 +43,6 @@ export async function updateVideoToSent(connection: Knex, id: number) {
   const videos = await fetchAllVideosForToday(knex)
 
   if (videos.length === 0) {
-    console.log("No videos to send out.")
     return response.json([])
   }
 
