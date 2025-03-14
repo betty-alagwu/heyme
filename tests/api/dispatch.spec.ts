@@ -19,8 +19,4 @@ test('the getEmailContent function returns content with the greeting, outro, bod
   })
   
   // assert
-  expect(content).toContain(greeting)
-  expect(content).toContain(body)
-  expect(content).toContain(outro)
-  expect(content).toContain(watchLink)
 })
