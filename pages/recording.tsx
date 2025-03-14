@@ -67,10 +67,7 @@ const Recording = () => {
         form.append('file', file)
         form.append('cloud_name', process.env.NEXT_PUBLIC_CLOUD_NAME)
 
-        const response = await Axios.post(process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL, form, {
-            onUploadProgress(event) {
-                setUploadProgress(event.progress)
-            }
+        const response = await Axios.post(process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL, form, 
         })
 
         // save video to database
