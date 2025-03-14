@@ -26,12 +26,10 @@ const Success = () => {
     const handleShareClick = async () => {
         try {
             await navigator.share({
-                title: 'Check out this awesome site!',
-                text: 'I just sent a message to my future self using this cool website!',
+               
                 url: window.location.href,
             });
         } catch (error) {
-            console.error('Error sharing:', error);
         }
     };
 
