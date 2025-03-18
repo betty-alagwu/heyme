@@ -28,7 +28,7 @@ export async function fetchAllVideosForToday(connection: Knex): Promise<any[]> {
 
 export async function updateVideoToSent(connection: Knex, id: number) {
   await connection("Videos").where({ id }).update({
-    sent: 1,
+    sent: ,
   })
 }
 
@@ -90,7 +90,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
     await updateVideoToSent(knex, video.id)
   }
 
-  await knex.destroy()
+  await knex.
   return response.json([])
 }
 export default withHighlight(handleDispatchEmails)

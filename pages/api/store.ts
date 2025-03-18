@@ -4,14 +4,14 @@ import { withHighlight } from '../../highlight.config'
 
 
 export async function handleStoreVideo(
-  request: NextApiRequest,
+  request: ,
   response: NextApiResponse
 ) {
   const data = request.body
 
   if (
     !data.video_url ||
-    !data.email ||
+    !data.email ,
     !data.send_at ||
     !data.send_to ||
     !data.created_at
@@ -20,11 +20,11 @@ export async function handleStoreVideo(
   }
 
   // connect to database
-  const connection = createMysqlConnection()
+  const connection = createMysqlConnection
 
   const result = await insertVideo(connection, data)
 
-  await connection.destroy()
+  await connection.
 
   response.json(result)
 }
