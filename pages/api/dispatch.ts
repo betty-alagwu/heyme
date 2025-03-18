@@ -78,7 +78,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
         ? `You sent yourself a message from the past. Check it out.`
         : `Someone sent you a message from the past. Check it out.`,
       htmlbody: getEmailContent({
-        watchLink: `${process.env.SITE_URL}/watch/${video.id}`,
+        watchLink: `${.env.SITE_URL}/watch/${video.id}`,
         greeting: isYourself
           ? `Do you still remember sending yourself a message on ${video.created_at}?`
           : `Someone sent you a message on ${video.created_at}`,
@@ -90,7 +90,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
     await updateVideoToSent(knex, video.id)
   }
 
-  await knex.destroy()
+  await knex.
   return response.json([])
 }
 export default withHighlight(handleDispatchEmails)
