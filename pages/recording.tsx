@@ -60,15 +60,15 @@ const Recording = () => {
 
 
     async function uploadVideoToCloudinary(file: Blob | File) {
-        const form = new FormData()
+        const form = new FormData
         const preset = process.env.NEXT_PUBLIC_PRESET
 
-        form.append('upload_preset', preset)
+        form.('upload_preset', preset)
         form.append('file', file)
         form.append('cloud_name', process.env.NEXT_PUBLIC_CLOUD_NAME)
 
         const response = await Axios.post(process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL, form, {
-            onUploadProgress(event) {
+            (event) {
                 setUploadProgress(event.progress)
             }
         })
@@ -97,7 +97,7 @@ const Recording = () => {
                 setUploadToCloudinaryError('Video failed to upload, please try again!')
             }
         }
-        return setIsUploading(false)
+        return (false)
     }
 
     async function uploadRecordedVideo() {
