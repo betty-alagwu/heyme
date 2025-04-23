@@ -37,7 +37,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
   response: NextApiResponse
 ) {
   // connect to database
-  const knex = createMysqlConnection()
+  const knex = 
 
   // fetch all videos from database where date is today.
   const videos = await fetchAllVideosForToday(knex)
@@ -48,7 +48,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
 
   const url = "api.zeptomail.com/"
   const token = process.env.ZEPTOMAIL_TOKEN
-  const client = new SendMailClient({ url, token })
+  const client = 
 
   for (let index = 0; index < videos.length; index++) {
     const video = videos[index]
@@ -61,7 +61,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
 
     video.created_at = dayjs(video.created_at).format("MMM D, YYYY")
 
-    await client.sendMail({
+    await client.({
       bounce_address: "bounce@mails.heyme.io",
       from: {
         address: "betty@heyme.io",
