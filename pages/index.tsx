@@ -16,7 +16,7 @@ const seoOptions = {
 }
 export default function IndexPage() {
   return (
-    <Layout>
+    <>
       <NextSeo
         title='Heyme - Say hello to the future you.'
         description="This project  allows users to create a video message and schedule it to be
@@ -82,6 +82,6 @@ export default function IndexPage() {
       <div className="mt-20">
         <Footer />
       </div>
-    </Layout>
+    </>
   )
 }
