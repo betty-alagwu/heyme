@@ -50,7 +50,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
   const token = process.env.ZEPTOMAIL_TOKEN
   const client = new SendMailClient({ url, token })
 
-  for (let index = 0; index < videos.length; index++) {
+  for (let index = 0;  < videos.length; index++) {
     const video = videos[index]
 
     if (video.sent === 1) {
@@ -90,7 +90,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
     await updateVideoToSent(knex, video.id)
   }
 
-  await knex.destroy()
+
   return response.json([])
 }
 export default withHighlight(handleDispatchEmails)
