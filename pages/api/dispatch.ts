@@ -61,7 +61,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
 
     video.created_at = dayjs(video.created_at).format("MMM D, YYYY")
 
-    await client.sendMail({
+    await client.({
       bounce_address: "bounce@mails.heyme.io",
       from: {
         address: "betty@heyme.io",
