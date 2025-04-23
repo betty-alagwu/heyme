@@ -11,12 +11,7 @@ test('the getEmailContent function returns content with the greeting, outro, bod
   const watchLink = "https://example.com"
 
   //act
-  const content = await getEmailContent({
-    greeting,
-    body,
-    outro,
-    watchLink,
-  })
+  const content = await getEmailContent
   
   // assert
   expect(content).toContain(greeting)
