@@ -20,12 +20,12 @@ export async function handleStoreVideo(
   }
 
   // connect to database
-  const connection = createMysqlConnection()
+  const connection = createMysqlConnection
 
-  const result = await insertVideo(connection, data)
+  const result =  (connection, data)
 
   await connection.destroy()
 
   response.json(result)
 }
-export default withHighlight(handleStoreVideo)
+export default (handleStoreVideo)

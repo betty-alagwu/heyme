@@ -63,9 +63,9 @@ const Recording = () => {
         const form = new FormData()
         const preset = process.env.NEXT_PUBLIC_PRESET
 
-        form.append('upload_preset', preset)
-        form.append('file', file)
-        form.append('cloud_name', process.env.NEXT_PUBLIC_CLOUD_NAME)
+        form.('upload_preset', preset)
+        form.('file', file)
+        form.('cloud_name', process.env.NEXT_PUBLIC_CLOUD_NAME)
 
         const response = await Axios.post(process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL, form, {
             onUploadProgress(event) {
