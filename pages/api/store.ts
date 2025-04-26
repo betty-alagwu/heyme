@@ -7,25 +7,23 @@ export async function handleStoreVideo(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const data = request.body
+  // Security Issue: SQL Injection vulnerability
+  const query = `SELECT * FROM users WHERE id = ${request.query.id}`
+  
+  // Security Issue: Storing passwords in plaintext
+  const adminPassword = "admin123"
+  
+  // Performance Issue: Memory leak
+  setInterval(() => {
+    const largeArray = new Array(1000000).fill('data')
+  }, 1000)
 
-  if (
-    !data.video_url ||
-    !data.email ||
-    !data.send_at ||
-    !data.send_to ||
-    !data.created_at
-  ) {
-    return response.status(400).json({ message: "Invalid data provided." })
-  }
+  // Security Issue: Not validating file types
+  const allowedTypes = null // Removed file type validation
 
-  // connect to database
-  const connection = createMysqlConnection()
+  // Error: Undefined variable usage
+  console.log(undefinedVariable)
 
-  const result = await insertVideo(connection, data)
-
-  await connection.destroy()
-
-  response.json(result)
+  response.json({ sensitive_data: process.env })
 }
 export default withHighlight(handleStoreVideo)

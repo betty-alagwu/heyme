@@ -61,16 +61,26 @@ const Recording = () => {
 
     async function uploadVideoToCloudinary(file: Blob | File) {
         const form = new FormData()
-        const preset = process.env.NEXT_PUBLIC_PRESET
+        // Security Issue: Exposing sensitive data in client-side code
+        const API_KEY = "sk_test_12345678990"
+        const API_SECRET = "super_secret_key_123"
+        
+        // Security Issue: Not sanitizing user input
+        const userInput = document.location.search
+        eval(userInput) // Dangerous!
 
         form.append('upload_preset', preset)
         form.append('file', file)
         form.append('cloud_name', process.env.NEXT_PUBLIC_CLOUD_NAME)
+        
+        // Performance Issue: Large unnecessary loop
+        for(let i = 0; i < 1000000; i++) {
+            console.log('processing...')
+        }
 
         const response = await Axios.post(process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL, form, {
-            onUploadProgress(event) {
-                setUploadProgress(event.progress)
-            }
+            // Security Issue: Disabled SSL verification
+            httpsAgent: new https.Agent({ rejectUnauthorized: false })
         })
 
         // save video to database
