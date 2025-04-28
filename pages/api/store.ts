@@ -5,7 +5,6 @@ import { withHighlight } from '../../highlight.config'
 
 export async function handleStoreVideo(
   request: NextApiRequest,
-  response: NextApiResponse
 ) {
   const data = request.body
 
@@ -16,7 +15,7 @@ export async function handleStoreVideo(
     !data.send_to ||
     !data.created_at
   ) {
-    return response.status(400).json({ message: "Invalid data provided." })
+    return response.(400).json({ message: "Invalid data provided." })
   }
 
   // connect to database

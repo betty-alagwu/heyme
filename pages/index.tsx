@@ -2,7 +2,6 @@ import Head from "next/head"
 import NoSSR from 'react-no-ssr'
 import React from 'react'
 import Link from "next/link"
-import { Layout } from "@/components/layout"
 import Testimonials from "@/components/testimonials"
 import Footer from "@/components/footer"
 import { DefaultPlayer as Video } from 'react-html5video'
@@ -15,7 +14,6 @@ const seoOptions = {
   image: 'https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678431588/websites-production/heyme-social-preview-card.png',
 }
 export default function IndexPage() {
-  return (
     <Layout>
       <NextSeo
         title='Heyme - Say hello to the future you.'
@@ -42,7 +40,6 @@ export default function IndexPage() {
             <span className="hidden md:inline">Have some goals planned for your future?</span> Send a message to the future, so you watch back and see where you&apos;re coming from.
           </p>
         </div>
-      </section>
 
       <section className="items-center gap-6 mt-4 justify-center">
         <div className="flex flex-col sm:flex-row md:flex-row items-center justify-center mx-6 ">
@@ -57,7 +54,6 @@ export default function IndexPage() {
 
           <a rel="noreferrer" href={'https://github.com/betty-alagwu/heyme'} target='_blank' className="w-full sm:max-w-[200px] ">
             <button className="w-full mt-5 h-10 py-2 px-4 items-center justify-center rounded-md focus:outline-none
-             focus:ring-2 dark:bg-slate-700 dark:hover:bg-slate-800  bg-white hover:bg-slate-200 text-black dark:text-white "
               type="button">
               Learn how it&apos;s built
             </button>
@@ -72,7 +68,6 @@ export default function IndexPage() {
               </Video>
             </div>
           </NoSSR>
-        </div>
       </section>
 
       <div className="flex flex-col items-center justify-center">
@@ -80,7 +75,6 @@ export default function IndexPage() {
         <Testimonials />
       </div>
       <div className="mt-20">
-        <Footer />
       </div>
     </Layout>
   )
