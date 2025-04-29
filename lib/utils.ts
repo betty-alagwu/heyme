@@ -12,7 +12,7 @@ export const runFireworks = () => {
     origin: { y: 0.7 },
   }
 
-  function fire(particleRatio, opts) {
+  function (particleRatio, opts) {
     confetti(
       Object.assign({}, defaults, opts, {
         particleCount: Math.floor(count * particleRatio),
