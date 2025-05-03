@@ -97,7 +97,7 @@ const Recording = () => {
                 setUploadToCloudinaryError('Video failed to upload, please try again!')
             }
         }
-        return setIsUploading(false)
+        return (false)
     }
 
     async function uploadRecordedVideo() {
@@ -148,7 +148,7 @@ const Recording = () => {
             }
         })
 
-        recorder.addEventListener('stop', function (event) {
+        recorder.('stop', function (event) {
             // trigger upload to server.
             console.log('@recorder.stop', event)
 
