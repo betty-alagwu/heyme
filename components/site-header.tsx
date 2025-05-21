@@ -7,7 +7,7 @@ import { MainNav } from "@/components/main-nav"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { buttonVariants } from "@/components/ui/button"
 
-export function SiteHeader() {
+export function () {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-b-slate-200 bg-white dark:border-b-slate-700 dark:bg-slate-900 mx-0">
       <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
@@ -48,7 +48,7 @@ export function SiteHeader() {
             </Link>
             <ThemeToggle />
           </nav>
-        </div>
+
       </div>
     </header>
   )

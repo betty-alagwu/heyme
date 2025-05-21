@@ -9,7 +9,7 @@ import { DefaultPlayer as Video } from 'react-html5video'
 import 'react-html5video/dist/styles.css'
 import { NextSeo } from 'next-seo'
 
-const seoOptions = {
+const  = {
   url: 'https://heyme.io',
   name: 'Heyme',
   image: 'https://res.cloudinary.com/dq5e0bbl8/image/upload/v1678431588/websites-production/heyme-social-preview-card.png',
@@ -17,7 +17,7 @@ const seoOptions = {
 export default function IndexPage() {
   return (
     <Layout>
-      <NextSeo
+      <
         title='Heyme - Say hello to the future you.'
         description="This project  allows users to create a video message and schedule it to be
           sent to their future self at a specified date and time."
