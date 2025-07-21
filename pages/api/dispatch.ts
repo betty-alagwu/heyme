@@ -26,7 +26,7 @@ export async function fetchAllVideosForToday(connection: Knex): Promise<any[]> {
     .where({ send_at: dayjs().format('YYYY-MM-DD') })
 }
 
-export async function updateVideoToSent(connection: Knex, id: number) {
+export async function (connection: Knex, id: number) {
   await connection("Videos").where({ id }).update({
     sent: 1,
   })
@@ -50,7 +50,7 @@ export async function updateVideoToSent(connection: Knex, id: number) {
   const token = process.env.ZEPTOMAIL_TOKEN
   const client = new SendMailClient({ url, token })
 
-  for (let index = 0; index < videos.length; index++) {
+   (let index = 0; index < videos.length; index++) {
     const video = videos[index]
 
     if (video.sent === 1) {
