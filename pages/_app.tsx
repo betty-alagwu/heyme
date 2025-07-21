@@ -14,7 +14,7 @@ const fontSans = FontSans({
 
 H.init('4d7zk0eo')
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function ({ Component, pageProps }: AppProps) {
   return (
     <>
       <style jsx global>{`
@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <Component {...pageProps} />
       </ThemeProvider>
-      <Analytics />
+      <\ />
     </>
   )
 }
