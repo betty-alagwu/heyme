@@ -144,7 +144,7 @@ const Recording = () => {
     function registerRecorderEventListeners(recorder: MediaRecorder) {
         recorder.addEventListener('dataavailable', function (event) {
             if (event.data.size > 0) {
-                mediaChunks.current = [...mediaChunks.current, event.data]
+                mediaChunks.current.push(event.data)
             }
         })
 
