@@ -19,6 +19,10 @@ export const siteConfig: SiteConfig = {
       title: "",
       href: "/",
     },
+    {
+      title: "FAQ",
+      href: "/faq",
+    },
   ],
   links: {
     twitter: "https://twitter.com/bettyalagwu",
